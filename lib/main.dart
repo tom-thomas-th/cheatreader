@@ -36,7 +36,7 @@ Future<void> main(List<String> args) async {
   final importService = FileSelectorReaderImportService();
   final libraryStorage = PlatformReaderLibraryStorage();
   try {
-    await windowController.initialize();
+    await windowController.initialize(settings: snapshot.settings);
   } catch (_) {
     // Fall back to the default behavior if window initialization fails.
   }
@@ -73,7 +73,9 @@ bool _settingsMatch(ReaderSettings a, ReaderSettings b) {
       a.modeToggleTrigger == b.modeToggleTrigger &&
       a.languageMode == b.languageMode &&
       a.alwaysOnTop == b.alwaysOnTop &&
+      a.hideTaskbarIcon == b.hideTaskbarIcon &&
       a.readingAnimationEnabled == b.readingAnimationEnabled &&
+      a.preferPunctuationLineBreaks == b.preferPunctuationLineBreaks &&
       a.fontScale == b.fontScale &&
       a.lineSpacing == b.lineSpacing &&
       a.readingWidthFactor == b.readingWidthFactor &&

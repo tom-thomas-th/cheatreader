@@ -118,6 +118,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'This platform does not support it right now';
 
   @override
+  String get hideTaskbarIconTitle => 'Hide taskbar icon';
+
+  @override
+  String get hideTaskbarIconSupported =>
+      'Hide the app icon from the taskbar or Dock';
+
+  @override
+  String get hideTaskbarIconUnsupported =>
+      'This platform does not support it right now';
+
+  @override
   String get transparentModeTitle => 'Transparent mode';
 
   @override

@@ -32,6 +32,7 @@ class SharedPreferencesReaderPreferencesStore
   static const _modeToggleTriggerKey = 'reader.modeToggleTrigger';
   static const _languageModeKey = 'reader.languageMode';
   static const _alwaysOnTopKey = 'reader.alwaysOnTop';
+  static const _hideTaskbarIconKey = 'reader.hideTaskbarIcon';
   static const _readingAnimationEnabledKey = 'reader.readingAnimationEnabled';
   static const _preferPunctuationLineBreaksKey =
       'reader.preferPunctuationLineBreaks';
@@ -78,6 +79,9 @@ class SharedPreferencesReaderPreferencesStore
         alwaysOnTop:
             _preferences.getBool(_alwaysOnTopKey) ??
             ReaderSettings.defaults.alwaysOnTop,
+        hideTaskbarIcon:
+            _preferences.getBool(_hideTaskbarIconKey) ??
+            ReaderSettings.defaults.hideTaskbarIcon,
         readingAnimationEnabled:
             _preferences.getBool(_readingAnimationEnabledKey) ??
             ReaderSettings.defaults.readingAnimationEnabled,
@@ -152,6 +156,7 @@ class SharedPreferencesReaderPreferencesStore
     );
     await _preferences.setString(_languageModeKey, settings.languageMode.name);
     await _preferences.setBool(_alwaysOnTopKey, settings.alwaysOnTop);
+    await _preferences.setBool(_hideTaskbarIconKey, settings.hideTaskbarIcon);
     await _preferences.setBool(
       _readingAnimationEnabledKey,
       settings.readingAnimationEnabled,

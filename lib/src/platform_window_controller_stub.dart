@@ -16,7 +16,10 @@ class UnsupportedPlatformWindowController implements PlatformWindowController {
   bool get supportsBossKey => false;
 
   @override
-  Future<void> initialize() async {}
+  bool get supportsTaskbarIconVisibility => false;
+
+  @override
+  Future<void> initialize({ReaderSettings? settings}) async {}
 
   @override
   Future<void> prepareForControlPanel({required Size screenSize}) async {}

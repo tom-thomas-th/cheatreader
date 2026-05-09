@@ -1726,6 +1726,19 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
       ),
       SwitchListTile(
         contentPadding: EdgeInsets.zero,
+        value: controller.settings.hideTaskbarIcon,
+        onChanged: windowController.supportsTaskbarIconVisibility
+            ? controller.setHideTaskbarIcon
+            : null,
+        title: Text(l10n.hideTaskbarIconTitle),
+        subtitle: Text(
+          windowController.supportsTaskbarIconVisibility
+              ? l10n.hideTaskbarIconSupported
+              : l10n.hideTaskbarIconUnsupported,
+        ),
+      ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
         value: controller.settings.transparentModeEnabled,
         onChanged: controller.setTransparentModeEnabled,
         title: Text(l10n.transparentModeTitle),

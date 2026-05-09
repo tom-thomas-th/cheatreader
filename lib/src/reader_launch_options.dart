@@ -30,6 +30,7 @@ ReaderPreferencesSnapshot applyLaunchOptionsToSnapshot(
   final settings = snapshot.settings;
   final recoveredSettings = settings.copyWith(
     oneLineMode: false,
+    hideTaskbarIcon: options.resetDisplay ? false : settings.hideTaskbarIcon,
     transparentModeEnabled: options.resetDisplay
         ? false
         : settings.transparentModeEnabled,
@@ -40,8 +41,8 @@ ReaderPreferencesSnapshot applyLaunchOptionsToSnapshot(
         ? ReaderTextColorMode.adaptive
         : settings.textColorMode,
     textBrightnessFactor: options.resetDisplay
-      ? ReaderSettings.defaultTextBrightnessFactor
-      : settings.textBrightnessFactor,
+        ? ReaderSettings.defaultTextBrightnessFactor
+        : settings.textBrightnessFactor,
   );
 
   return ReaderPreferencesSnapshot(

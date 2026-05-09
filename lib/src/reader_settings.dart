@@ -14,6 +14,7 @@ class ReaderSettings {
     required this.modeToggleTrigger,
     required this.languageMode,
     required this.alwaysOnTop,
+    required this.hideTaskbarIcon,
     required this.readingAnimationEnabled,
     required this.preferPunctuationLineBreaks,
     required this.fontScale,
@@ -49,6 +50,7 @@ class ReaderSettings {
     modeToggleTrigger: ReaderModeToggleTrigger.doubleClick,
     languageMode: ReaderLanguageMode.system,
     alwaysOnTop: false,
+    hideTaskbarIcon: false,
     readingAnimationEnabled: false,
     preferPunctuationLineBreaks: true,
     fontScale: 1.0,
@@ -70,6 +72,7 @@ class ReaderSettings {
   final ReaderModeToggleTrigger modeToggleTrigger;
   final ReaderLanguageMode languageMode;
   final bool alwaysOnTop;
+  final bool hideTaskbarIcon;
   final bool readingAnimationEnabled;
   final bool preferPunctuationLineBreaks;
   final double fontScale;
@@ -93,6 +96,7 @@ class ReaderSettings {
     ReaderModeToggleTrigger? modeToggleTrigger,
     ReaderLanguageMode? languageMode,
     bool? alwaysOnTop,
+    bool? hideTaskbarIcon,
     bool? readingAnimationEnabled,
     bool? preferPunctuationLineBreaks,
     double? fontScale,
@@ -114,6 +118,7 @@ class ReaderSettings {
       modeToggleTrigger: modeToggleTrigger ?? this.modeToggleTrigger,
       languageMode: languageMode ?? this.languageMode,
       alwaysOnTop: alwaysOnTop ?? this.alwaysOnTop,
+      hideTaskbarIcon: hideTaskbarIcon ?? this.hideTaskbarIcon,
       readingAnimationEnabled:
           readingAnimationEnabled ?? this.readingAnimationEnabled,
       preferPunctuationLineBreaks:

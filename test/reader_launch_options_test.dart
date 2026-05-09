@@ -22,6 +22,7 @@ void main() {
       final snapshot = ReaderPreferencesSnapshot(
         settings: ReaderSettings.defaults.copyWith(
           oneLineMode: true,
+          hideTaskbarIcon: true,
           transparentModeEnabled: true,
           transparentTextShadowEnabled: false,
           windowOpacity: 0.42,
@@ -48,6 +49,7 @@ void main() {
       );
 
       expect(recovered.settings.oneLineMode, isFalse);
+      expect(recovered.settings.hideTaskbarIcon, isFalse);
       expect(recovered.settings.transparentModeEnabled, isFalse);
       expect(recovered.settings.transparentTextShadowEnabled, isFalse);
       expect(recovered.settings.windowOpacity, 0.94);
@@ -67,6 +69,7 @@ void main() {
         final snapshot = ReaderPreferencesSnapshot(
           settings: ReaderSettings.defaults.copyWith(
             oneLineMode: true,
+            hideTaskbarIcon: true,
             transparentModeEnabled: true,
             transparentTextShadowEnabled: false,
             windowOpacity: 0.42,
@@ -83,6 +86,7 @@ void main() {
         );
 
         expect(recovered.settings.oneLineMode, isFalse);
+        expect(recovered.settings.hideTaskbarIcon, isTrue);
         expect(recovered.settings.transparentModeEnabled, isTrue);
         expect(recovered.settings.transparentTextShadowEnabled, isFalse);
         expect(recovered.settings.windowOpacity, 0.42);

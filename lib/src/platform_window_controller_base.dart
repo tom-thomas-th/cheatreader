@@ -22,7 +22,9 @@ abstract class PlatformWindowController {
 
   bool get supportsBossKey;
 
-  Future<void> initialize();
+  bool get supportsTaskbarIconVisibility;
+
+  Future<void> initialize({ReaderSettings? settings});
 
   Future<void> prepareForControlPanel({required Size screenSize});
 

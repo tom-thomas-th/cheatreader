@@ -296,6 +296,24 @@ abstract class AppLocalizations {
   /// **'This platform does not support it right now'**
   String get alwaysOnTopUnsupported;
 
+  /// No description provided for @hideTaskbarIconTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide taskbar icon'**
+  String get hideTaskbarIconTitle;
+
+  /// No description provided for @hideTaskbarIconSupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the app icon from the taskbar or Dock'**
+  String get hideTaskbarIconSupported;
+
+  /// No description provided for @hideTaskbarIconUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This platform does not support it right now'**
+  String get hideTaskbarIconUnsupported;
+
   /// No description provided for @transparentModeTitle.
   ///
   /// In en, this message translates to:

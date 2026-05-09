@@ -243,6 +243,10 @@ class ReaderController extends ChangeNotifier {
     _updateSettings(_settings.copyWith(alwaysOnTop: value));
   }
 
+  void setHideTaskbarIcon(bool value) {
+    _updateSettings(_settings.copyWith(hideTaskbarIcon: value));
+  }
+
   void setReadingAnimationEnabled(bool value) {
     _updateSettings(_settings.copyWith(readingAnimationEnabled: value));
   }
@@ -519,6 +523,7 @@ class ReaderController extends ChangeNotifier {
         _settings.modeToggleTrigger == value.modeToggleTrigger &&
         _settings.languageMode == value.languageMode &&
         _settings.alwaysOnTop == value.alwaysOnTop &&
+        _settings.hideTaskbarIcon == value.hideTaskbarIcon &&
         _settings.readingAnimationEnabled == value.readingAnimationEnabled &&
         _settings.preferPunctuationLineBreaks ==
             value.preferPunctuationLineBreaks &&

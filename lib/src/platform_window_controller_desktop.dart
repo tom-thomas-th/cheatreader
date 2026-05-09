@@ -89,11 +89,15 @@ class DesktopPlatformWindowController implements PlatformWindowController {
   bool get supportsBossKey => _isSupportedDesktop;
 
   @override
-  Future<void> initialize() async {
+  bool get supportsTaskbarIconVisibility => _isSupportedDesktop;
+
+  @override
+  Future<void> initialize({ReaderSettings? settings}) async {
     if (!_isSupportedDesktop) {
       return;
     }
 
+    final initialSettings = settings ?? ReaderSettings.defaults;
     await windowManager.ensureInitialized();
     final titleBarStyle = _useNativeLinuxFrameless
         ? null
@@ -102,7 +106,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       size: _normalSize,
       center: true,
       backgroundColor: Colors.transparent,
-      skipTaskbar: false,
+      skipTaskbar: initialSettings.hideTaskbarIcon,
       titleBarStyle: titleBarStyle,
       windowButtonVisibility: !_useFramelessWindow,
     );
@@ -357,6 +361,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setHasShadow(false);
     }
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
+    await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);
 
     if (_controlPanelRestorePosition != null) {
@@ -395,6 +400,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setHasShadow(false);
     }
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
+    await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);
     final currentSize = restoreSize ?? await windowManager.getSize();
     if (_lastOneLineMode == true) {

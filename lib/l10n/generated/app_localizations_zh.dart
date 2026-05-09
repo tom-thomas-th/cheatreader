@@ -114,6 +114,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alwaysOnTopUnsupported => '当前平台暂不支持';
 
   @override
+  String get hideTaskbarIconTitle => '隐藏任务栏图标';
+
+  @override
+  String get hideTaskbarIconSupported => '从任务栏或 Dock 隐藏应用图标';
+
+  @override
+  String get hideTaskbarIconUnsupported => '当前平台暂不支持';
+
+  @override
   String get transparentModeTitle => '透明模式';
 
   @override

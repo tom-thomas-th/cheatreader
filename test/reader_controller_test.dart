@@ -213,6 +213,7 @@ void main() {
       controller.setReadingWidthFactor(0.7);
       controller.setWindowOpacity(0.78);
       controller.setAlwaysOnTop(true);
+      controller.setHideTaskbarIcon(true);
       controller.setTransparentModeEnabled(true);
       controller.setTransparentTextShadowEnabled(false);
       controller.setPreferPunctuationLineBreaks(false);
@@ -241,6 +242,7 @@ void main() {
       expect(saved.settings.readingWidthFactor, 0.7);
       expect(saved.settings.windowOpacity, 0.78);
       expect(saved.settings.alwaysOnTop, isTrue);
+      expect(saved.settings.hideTaskbarIcon, isTrue);
       expect(saved.settings.transparentModeEnabled, isTrue);
       expect(saved.settings.transparentTextShadowEnabled, isFalse);
       expect(saved.settings.preferPunctuationLineBreaks, isFalse);
@@ -275,6 +277,7 @@ void main() {
       expect(windowController.syncedSettings?.readingWidthFactor, 0.7);
       expect(windowController.syncedSettings?.windowOpacity, 0.78);
       expect(windowController.syncedSettings?.alwaysOnTop, isTrue);
+      expect(windowController.syncedSettings?.hideTaskbarIcon, isTrue);
       expect(windowController.syncedSettings?.transparentModeEnabled, isTrue);
       expect(
         windowController.syncedSettings?.transparentTextShadowEnabled,
@@ -647,6 +650,7 @@ void main() {
         loaded.settings.windowOpacity,
         ReaderSettings.defaults.windowOpacity,
       );
+      expect(loaded.settings.hideTaskbarIcon, isFalse);
       expect(loaded.settings.shortcutBindings, ReaderShortcutBindings.defaults);
       expect(loaded.bookshelf, isEmpty);
     });
@@ -659,6 +663,7 @@ void main() {
         modeToggleTrigger: ReaderModeToggleTrigger.keyboardShortcut,
         languageMode: ReaderLanguageMode.english,
         alwaysOnTop: false,
+        hideTaskbarIcon: true,
         readingAnimationEnabled: true,
         preferPunctuationLineBreaks: false,
         fontScale: 1.2,
@@ -696,6 +701,7 @@ void main() {
         ReaderModeToggleTrigger.keyboardShortcut,
       );
       expect(loaded.settings.alwaysOnTop, isFalse);
+      expect(loaded.settings.hideTaskbarIcon, isTrue);
       expect(loaded.settings.preferPunctuationLineBreaks, isFalse);
       expect(loaded.settings.fontScale, 1.2);
       expect(loaded.settings.lineSpacing, 1.8);
@@ -818,7 +824,10 @@ class FakePlatformWindowController implements PlatformWindowController {
   bool get supportsBossKey => true;
 
   @override
-  Future<void> initialize() async {}
+  bool get supportsTaskbarIconVisibility => true;
+
+  @override
+  Future<void> initialize({ReaderSettings? settings}) async {}
 
   @override
   Future<void> prepareForControlPanel({required Size screenSize}) async {}
