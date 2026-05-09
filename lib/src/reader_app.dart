@@ -913,6 +913,8 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
       style: style,
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
+      preferPunctuationLineBreaks:
+          controller.settings.preferPunctuationLineBreaks,
     );
     _cachedOneLineSegments = segments;
 
@@ -956,6 +958,8 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
       style: style,
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
+      preferPunctuationLineBreaks:
+          controller.settings.preferPunctuationLineBreaks,
     );
     _cachedMultiLineSourceSegments = currentSourceSegments;
 
@@ -996,6 +1000,8 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
               style: style,
               textDirection: Directionality.of(context),
               textScaler: MediaQuery.textScalerOf(context),
+              preferPunctuationLineBreaks:
+                  controller.settings.preferPunctuationLineBreaks,
             );
       for (
         var index = segmentIndex;
@@ -1071,6 +1077,7 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     required TextStyle style,
     required TextDirection textDirection,
     required TextScaler textScaler,
+    required bool preferPunctuationLineBreaks,
   }) {
     if (text.isEmpty || maxWidth <= 0) {
       return text.isEmpty ? const <String>[''] : <String>[text];
@@ -1099,7 +1106,9 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
         }
       }
 
-      final wrapEnd = _preferWrapBoundary(text, start, best);
+      final wrapEnd = preferPunctuationLineBreaks
+          ? _preferWrapBoundary(text, start, best)
+          : best;
       segments.add(text.substring(start, wrapEnd));
       start = wrapEnd;
     }
@@ -1735,6 +1744,13 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
         onChanged: controller.setReadingAnimationEnabled,
         title: Text(l10n.readingAnimationTitle),
         subtitle: Text(l10n.readingAnimationSubtitle),
+      ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        value: controller.settings.preferPunctuationLineBreaks,
+        onChanged: controller.setPreferPunctuationLineBreaks,
+        title: Text(l10n.punctuationLineBreaksTitle),
+        subtitle: Text(l10n.punctuationLineBreaksSubtitle),
       ),
       const SizedBox(height: 12),
       Text(l10n.languageTitle),

@@ -332,6 +332,18 @@ abstract class AppLocalizations {
   /// **'Use only a slight slide to soften line changes'**
   String get readingAnimationSubtitle;
 
+  /// No description provided for @punctuationLineBreaksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Prefer punctuation line breaks'**
+  String get punctuationLineBreaksTitle;
+
+  /// No description provided for @punctuationLineBreaksSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off to fill each line by reading width before wrapping'**
+  String get punctuationLineBreaksSubtitle;
+
   /// No description provided for @fontTitle.
   ///
   /// In en, this message translates to:

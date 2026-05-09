@@ -33,6 +33,8 @@ class SharedPreferencesReaderPreferencesStore
   static const _languageModeKey = 'reader.languageMode';
   static const _alwaysOnTopKey = 'reader.alwaysOnTop';
   static const _readingAnimationEnabledKey = 'reader.readingAnimationEnabled';
+  static const _preferPunctuationLineBreaksKey =
+      'reader.preferPunctuationLineBreaks';
   static const _fontScaleKey = 'reader.fontScale';
   static const _lineSpacingKey = 'reader.lineSpacing';
   static const _readingWidthFactorKey = 'reader.readingWidthFactor';
@@ -79,6 +81,9 @@ class SharedPreferencesReaderPreferencesStore
         readingAnimationEnabled:
             _preferences.getBool(_readingAnimationEnabledKey) ??
             ReaderSettings.defaults.readingAnimationEnabled,
+        preferPunctuationLineBreaks:
+            _preferences.getBool(_preferPunctuationLineBreaksKey) ??
+            ReaderSettings.defaults.preferPunctuationLineBreaks,
         fontScale: _normalizeFontScale(
           _preferences.getDouble(_fontScaleKey) ??
               ReaderSettings.defaults.fontScale,
@@ -150,6 +155,10 @@ class SharedPreferencesReaderPreferencesStore
     await _preferences.setBool(
       _readingAnimationEnabledKey,
       settings.readingAnimationEnabled,
+    );
+    await _preferences.setBool(
+      _preferPunctuationLineBreaksKey,
+      settings.preferPunctuationLineBreaks,
     );
     await _preferences.setDouble(
       _fontScaleKey,

@@ -132,6 +132,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get readingAnimationSubtitle => '滑动动效';
 
   @override
+  String get punctuationLineBreaksTitle => '标点优先换行';
+
+  @override
+  String get punctuationLineBreaksSubtitle => '关闭后会按阅读宽度尽量排满每一行';
+
+  @override
   String get fontTitle => '字体';
 
   @override

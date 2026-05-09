@@ -50,6 +50,8 @@
   "transparentTextShadowSubtitle": "Add a readability halo around letters when the reader has no background",
   "readingAnimationTitle": "Reading transition animation",
   "readingAnimationSubtitle": "Use only a slight slide to soften line changes",
+  "punctuationLineBreaksTitle": "Prefer punctuation line breaks",
+  "punctuationLineBreaksSubtitle": "Turn off to fill each line by reading width before wrapping",
   "fontTitle": "Font",
   "fontDefault": "Default",
   "fontSerif": "Serif",

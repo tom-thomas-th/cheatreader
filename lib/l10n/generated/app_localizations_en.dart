@@ -139,6 +139,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Use only a slight slide to soften line changes';
 
   @override
+  String get punctuationLineBreaksTitle => 'Prefer punctuation line breaks';
+
+  @override
+  String get punctuationLineBreaksSubtitle =>
+      'Turn off to fill each line by reading width before wrapping';
+
+  @override
   String get fontTitle => 'Font';
 
   @override

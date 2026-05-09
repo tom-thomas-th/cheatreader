@@ -454,6 +454,59 @@ void main() {
     },
   );
 
+  testWidgets('can disable punctuation-preferred visual wrapping', (
+    WidgetTester tester,
+  ) async {
+    const content = '甲乙丙丁戊，己庚辛壬癸子丑寅卯辰巳午未申酉戌亥';
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(260, 96);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    Future<String> displayedText({
+      required bool preferPunctuationLineBreaks,
+    }) async {
+      final controller = ReaderController(
+        initialContent: content,
+        preferencesStore: MemoryReaderPreferencesStore(
+          initialSettings: ReaderSettings.defaults.copyWith(
+            preferPunctuationLineBreaks: preferPunctuationLineBreaks,
+          ),
+        ),
+        windowController: _FakePlatformWindowController(),
+        fileBookmarkService: _FakeReaderFileBookmarkService(),
+        importService: _FakeReaderImportService(),
+        libraryStorage: MemoryReaderLibraryStorage(),
+      );
+      await controller.initialize();
+
+      await tester.pumpWidget(
+        CheatReaderApp(
+          controller: controller,
+          windowController: _FakePlatformWindowController(),
+        ),
+      );
+      await tester.pump();
+
+      return tester.widget<Text>(find.byType(Text).first).data!;
+    }
+
+    final punctuationPreferred = await displayedText(
+      preferPunctuationLineBreaks: true,
+    );
+    final compact = await displayedText(preferPunctuationLineBreaks: false);
+
+    final punctuationPreferredFirstLine = punctuationPreferred
+        .split('\n')
+        .first;
+    final compactFirstLine = compact.split('\n').first;
+    expect(punctuationPreferredFirstLine, endsWith('，'));
+    expect(
+      compactFirstLine.length,
+      greaterThan(punctuationPreferredFirstLine.length),
+    );
+  });
+
   testWidgets('reading animation can be enabled explicitly', (
     WidgetTester tester,
   ) async {

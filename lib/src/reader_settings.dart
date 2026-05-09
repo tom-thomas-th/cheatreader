@@ -15,6 +15,7 @@ class ReaderSettings {
     required this.languageMode,
     required this.alwaysOnTop,
     required this.readingAnimationEnabled,
+    required this.preferPunctuationLineBreaks,
     required this.fontScale,
     required this.lineSpacing,
     required this.readingWidthFactor,
@@ -49,6 +50,7 @@ class ReaderSettings {
     languageMode: ReaderLanguageMode.system,
     alwaysOnTop: false,
     readingAnimationEnabled: false,
+    preferPunctuationLineBreaks: true,
     fontScale: 1.0,
     lineSpacing: 1.5,
     readingWidthFactor: 1.0,
@@ -69,6 +71,7 @@ class ReaderSettings {
   final ReaderLanguageMode languageMode;
   final bool alwaysOnTop;
   final bool readingAnimationEnabled;
+  final bool preferPunctuationLineBreaks;
   final double fontScale;
   final double lineSpacing;
   final double readingWidthFactor;
@@ -91,6 +94,7 @@ class ReaderSettings {
     ReaderLanguageMode? languageMode,
     bool? alwaysOnTop,
     bool? readingAnimationEnabled,
+    bool? preferPunctuationLineBreaks,
     double? fontScale,
     double? lineSpacing,
     double? readingWidthFactor,
@@ -112,6 +116,8 @@ class ReaderSettings {
       alwaysOnTop: alwaysOnTop ?? this.alwaysOnTop,
       readingAnimationEnabled:
           readingAnimationEnabled ?? this.readingAnimationEnabled,
+      preferPunctuationLineBreaks:
+          preferPunctuationLineBreaks ?? this.preferPunctuationLineBreaks,
       fontScale: fontScale ?? this.fontScale,
       lineSpacing: lineSpacing ?? this.lineSpacing,
       readingWidthFactor: readingWidthFactor ?? this.readingWidthFactor,

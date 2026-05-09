@@ -247,6 +247,10 @@ class ReaderController extends ChangeNotifier {
     _updateSettings(_settings.copyWith(readingAnimationEnabled: value));
   }
 
+  void setPreferPunctuationLineBreaks(bool value) {
+    _updateSettings(_settings.copyWith(preferPunctuationLineBreaks: value));
+  }
+
   void setFontFamilyPreset(ReaderFontFamilyPreset value) {
     _updateSettings(_settings.copyWith(fontFamilyPreset: value));
   }
@@ -516,6 +520,8 @@ class ReaderController extends ChangeNotifier {
         _settings.languageMode == value.languageMode &&
         _settings.alwaysOnTop == value.alwaysOnTop &&
         _settings.readingAnimationEnabled == value.readingAnimationEnabled &&
+        _settings.preferPunctuationLineBreaks ==
+            value.preferPunctuationLineBreaks &&
         _settings.fontScale == value.fontScale &&
         _settings.lineSpacing == value.lineSpacing &&
         _settings.readingWidthFactor == value.readingWidthFactor &&

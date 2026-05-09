@@ -215,6 +215,7 @@ void main() {
       controller.setAlwaysOnTop(true);
       controller.setTransparentModeEnabled(true);
       controller.setTransparentTextShadowEnabled(false);
+      controller.setPreferPunctuationLineBreaks(false);
       controller.setTextBrightnessFactor(0.6);
       controller.setTextColorMode(ReaderTextColorMode.custom);
       controller.setCustomTextColorValue(0xFF2B6CB0);
@@ -242,6 +243,7 @@ void main() {
       expect(saved.settings.alwaysOnTop, isTrue);
       expect(saved.settings.transparentModeEnabled, isTrue);
       expect(saved.settings.transparentTextShadowEnabled, isFalse);
+      expect(saved.settings.preferPunctuationLineBreaks, isFalse);
       expect(saved.settings.textBrightnessFactor, 0.6);
       expect(saved.settings.textColorMode, ReaderTextColorMode.custom);
       expect(saved.settings.customTextColorValue, 0xFF2B6CB0);
@@ -276,6 +278,10 @@ void main() {
       expect(windowController.syncedSettings?.transparentModeEnabled, isTrue);
       expect(
         windowController.syncedSettings?.transparentTextShadowEnabled,
+        isFalse,
+      );
+      expect(
+        windowController.syncedSettings?.preferPunctuationLineBreaks,
         isFalse,
       );
       expect(windowController.syncedSettings?.textBrightnessFactor, 0.6);
@@ -654,6 +660,7 @@ void main() {
         languageMode: ReaderLanguageMode.english,
         alwaysOnTop: false,
         readingAnimationEnabled: true,
+        preferPunctuationLineBreaks: false,
         fontScale: 1.2,
         lineSpacing: 1.8,
         readingWidthFactor: 0.72,
@@ -689,6 +696,7 @@ void main() {
         ReaderModeToggleTrigger.keyboardShortcut,
       );
       expect(loaded.settings.alwaysOnTop, isFalse);
+      expect(loaded.settings.preferPunctuationLineBreaks, isFalse);
       expect(loaded.settings.fontScale, 1.2);
       expect(loaded.settings.lineSpacing, 1.8);
       expect(loaded.settings.readingWidthFactor, 0.72);
