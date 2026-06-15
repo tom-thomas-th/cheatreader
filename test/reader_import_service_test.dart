@@ -112,6 +112,23 @@ void main() {
       await tempDirectory.delete(recursive: true);
     });
 
+    test('extracts readable text from html files with comment nodes', () async {
+      final tempDirectory = await Directory.systemTemp.createTemp(
+        'cheatreader-import-test',
+      );
+      final file = File('${tempDirectory.path}/chapter.html');
+      await file.writeAsString(
+        '<html><body><!-- 注释 --><h1>标题</h1><p>第一段</p><!-- 另一个注释 --><p>第二段</p></body></html>',
+      );
+
+      final service = FileSelectorReaderImportService();
+      final imported = await service.openTxtFile(file.path);
+
+      expect(imported.content, '标题\n第一段\n第二段');
+
+      await tempDirectory.delete(recursive: true);
+    });
+
     test('extracts readable text from fb2 files', () async {
       final tempDirectory = await Directory.systemTemp.createTemp(
         'cheatreader-import-test',
