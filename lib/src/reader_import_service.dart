@@ -158,7 +158,7 @@ class FileSelectorReaderImportService implements ReaderImportService {
       for (final child in node.nodes) {
         if (child.nodeType == 3) {
           buffer.write(child.text);
-        } else {
+        } else if (child.nodeType == 1) {
           appendNodeText(child);
         }
       }
