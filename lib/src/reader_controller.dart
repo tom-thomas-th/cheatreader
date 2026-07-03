@@ -255,6 +255,22 @@ class ReaderController extends ChangeNotifier {
     _updateSettings(_settings.copyWith(preferPunctuationLineBreaks: value));
   }
 
+  void setAutoPageEnabled(bool value) {
+    _updateSettings(_settings.copyWith(autoPageEnabled: value));
+  }
+
+  void setAutoPageIntervalSeconds(int value) {
+    _updateSettings(
+      _settings.copyWith(
+        autoPageIntervalSeconds: _normalizeAutoPageInterval(value),
+      ),
+    );
+  }
+
+  void setAutoPageGranularity(ReaderAutoPageGranularity value) {
+    _updateSettings(_settings.copyWith(autoPageGranularity: value));
+  }
+
   void setFontFamilyPreset(ReaderFontFamilyPreset value) {
     _updateSettings(_settings.copyWith(fontFamilyPreset: value));
   }
@@ -540,7 +556,10 @@ class ReaderController extends ChangeNotifier {
         _settings.textColorMode == value.textColorMode &&
         _settings.customTextColorValue == value.customTextColorValue &&
         _settings.textBrightnessFactor == value.textBrightnessFactor &&
-        _settings.shortcutBindings == value.shortcutBindings) {
+        _settings.shortcutBindings == value.shortcutBindings &&
+        _settings.autoPageEnabled == value.autoPageEnabled &&
+        _settings.autoPageIntervalSeconds == value.autoPageIntervalSeconds &&
+        _settings.autoPageGranularity == value.autoPageGranularity) {
       return;
     }
 
@@ -621,6 +640,13 @@ class ReaderController extends ChangeNotifier {
     }
 
     return value.clamp(min, max).toDouble();
+  }
+
+  int _normalizeAutoPageInterval(int value) {
+    return value.clamp(
+      ReaderSettings.minAutoPageIntervalSeconds,
+      ReaderSettings.maxAutoPageIntervalSeconds,
+    );
   }
 
   Future<void> _persistCurrentBookProgress() async {

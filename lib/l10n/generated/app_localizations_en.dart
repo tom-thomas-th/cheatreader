@@ -460,4 +460,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String sliderDegrees(Object value) {
     return '$value°';
   }
+
+  @override
+  String get autoPageTitle => 'Auto page-turn';
+
+  @override
+  String get autoPageSubtitle => 'Advance automatically on a timer';
+
+  @override
+  String get autoPageIntervalLabel => 'Page interval';
+
+  @override
+  String autoPageIntervalValue(int seconds) {
+    return 'Every ${seconds}s';
+  }
+
+  @override
+  String get autoPageGranularityLabel => 'Advance per tick';
+
+  @override
+  String get autoPageGranularityPage => 'Page';
+
+  @override
+  String get autoPageGranularityLine => 'Line';
+
+  @override
+  String get shortcutAutoPage => 'Auto page-turn';
+
+  @override
+  String get autoPageOnMessage => 'Auto page-turn on';
+
+  @override
+  String get autoPageOffMessage => 'Auto page-turn off';
+
+  @override
+  String get autoPageReachedEnd => 'Reached the end; auto page-turn stopped';
 }

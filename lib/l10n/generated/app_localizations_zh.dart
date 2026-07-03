@@ -440,4 +440,39 @@ class AppLocalizationsZh extends AppLocalizations {
   String sliderDegrees(Object value) {
     return '$value°';
   }
+
+  @override
+  String get autoPageTitle => '自动翻页';
+
+  @override
+  String get autoPageSubtitle => '按设定间隔自动前进';
+
+  @override
+  String get autoPageIntervalLabel => '翻页间隔';
+
+  @override
+  String autoPageIntervalValue(int seconds) {
+    return '每 $seconds 秒';
+  }
+
+  @override
+  String get autoPageGranularityLabel => '每次前进';
+
+  @override
+  String get autoPageGranularityPage => '整页';
+
+  @override
+  String get autoPageGranularityLine => '逐行';
+
+  @override
+  String get shortcutAutoPage => '自动翻页';
+
+  @override
+  String get autoPageOnMessage => '自动翻页已开启';
+
+  @override
+  String get autoPageOffMessage => '自动翻页已关闭';
+
+  @override
+  String get autoPageReachedEnd => '已到达结尾，自动翻页已停止';
 }

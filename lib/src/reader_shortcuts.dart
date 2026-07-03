@@ -9,6 +9,7 @@ enum ReaderShortcutAction {
   toggleMode,
   bossKey,
   locateReader,
+  autoPage,
 }
 
 class ReaderShortcutKey {
@@ -70,6 +71,10 @@ class ReaderShortcutKey {
     logicalKeyId: 0x0000000062,
     legacyName: 'keyB',
   );
+  static const keyA = ReaderShortcutKey(
+    logicalKeyId: 0x0000000061,
+    legacyName: 'keyA',
+  );
   static const controlShiftF = ReaderShortcutKey(
     logicalKeyId: 0x0000000066,
     shift: true,
@@ -90,6 +95,7 @@ class ReaderShortcutKey {
     keyP,
     keyM,
     keyB,
+    keyA,
     controlShiftF,
   ];
 
@@ -219,6 +225,7 @@ class ReaderShortcutBindings {
     required this.toggleMode,
     required this.bossKey,
     required this.locateReader,
+    required this.autoPage,
   });
 
   static const ReaderShortcutBindings defaults = ReaderShortcutBindings(
@@ -229,6 +236,7 @@ class ReaderShortcutBindings {
     toggleMode: ReaderShortcutKey.keyM,
     bossKey: ReaderShortcutKey.keyB,
     locateReader: ReaderShortcutKey.controlShiftF,
+    autoPage: ReaderShortcutKey.keyA,
   );
 
   final ReaderShortcutKey nextLine;
@@ -238,6 +246,7 @@ class ReaderShortcutBindings {
   final ReaderShortcutKey toggleMode;
   final ReaderShortcutKey bossKey;
   final ReaderShortcutKey locateReader;
+  final ReaderShortcutKey autoPage;
 
   ReaderShortcutKey keyForAction(ReaderShortcutAction action) {
     return switch (action) {
@@ -248,6 +257,7 @@ class ReaderShortcutBindings {
       ReaderShortcutAction.toggleMode => toggleMode,
       ReaderShortcutAction.bossKey => bossKey,
       ReaderShortcutAction.locateReader => locateReader,
+      ReaderShortcutAction.autoPage => autoPage,
     };
   }
 
@@ -259,6 +269,7 @@ class ReaderShortcutBindings {
     ReaderShortcutKey? toggleMode,
     ReaderShortcutKey? bossKey,
     ReaderShortcutKey? locateReader,
+    ReaderShortcutKey? autoPage,
   }) {
     return ReaderShortcutBindings(
       nextLine: nextLine ?? this.nextLine,
@@ -268,6 +279,7 @@ class ReaderShortcutBindings {
       toggleMode: toggleMode ?? this.toggleMode,
       bossKey: bossKey ?? this.bossKey,
       locateReader: locateReader ?? this.locateReader,
+      autoPage: autoPage ?? this.autoPage,
     );
   }
 
@@ -283,6 +295,7 @@ class ReaderShortcutBindings {
       ReaderShortcutAction.toggleMode => copyWith(toggleMode: key),
       ReaderShortcutAction.bossKey => copyWith(bossKey: key),
       ReaderShortcutAction.locateReader => copyWith(locateReader: key),
+      ReaderShortcutAction.autoPage => copyWith(autoPage: key),
     };
   }
 
@@ -310,6 +323,7 @@ class ReaderShortcutBindings {
       'toggleMode': toggleMode.storageValue,
       'bossKey': bossKey.storageValue,
       'locateReader': locateReader.storageValue,
+      'autoPage': autoPage.storageValue,
     };
   }
 
@@ -330,6 +344,7 @@ class ReaderShortcutBindings {
       toggleMode: decode('toggleMode', defaults.toggleMode),
       bossKey: decode('bossKey', defaults.bossKey),
       locateReader: decode('locateReader', defaults.locateReader),
+      autoPage: decode('autoPage', defaults.autoPage),
     );
   }
 
@@ -342,7 +357,8 @@ class ReaderShortcutBindings {
         other.previousPage == previousPage &&
         other.toggleMode == toggleMode &&
         other.bossKey == bossKey &&
-        other.locateReader == locateReader;
+        other.locateReader == locateReader &&
+        other.autoPage == autoPage;
   }
 
   @override
@@ -354,5 +370,6 @@ class ReaderShortcutBindings {
     toggleMode,
     bossKey,
     locateReader,
+    autoPage,
   );
 }

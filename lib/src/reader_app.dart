@@ -195,6 +195,9 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
   OverlayEntry? _messageOverlayEntry;
   Timer? _messageTimer;
   Timer? _locatorHighlightTimer;
+  Timer? _autoPageTimer;
+  bool _autoPageActive = false;
+  int _autoPageIntervalSeconds = ReaderSettings.defaultAutoPageIntervalSeconds;
   bool _windowListenerRegistered = false;
   bool _locatorHighlightVisible = false;
   DateTime? _lastForegroundRecoveryAt;
@@ -517,16 +520,77 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     return true;
   }
 
-  void _advanceReadingPage() {
+  bool _advanceReadingPage() {
     final stepCount = math.max(1, _visibleVisualLineCapacity);
+    var movedAny = false;
     var animated = false;
     for (var index = 0; index < stepCount; index += 1) {
       final moved = _advanceReadingInternal(animate: !animated);
       if (!moved) {
         break;
       }
+      movedAny = true;
       animated = true;
     }
+    return movedAny;
+  }
+
+  void _syncAutoPageTimer() {
+    final settings = widget.controller.settings;
+    final desiredActive = settings.autoPageEnabled;
+    final desiredInterval = settings.autoPageIntervalSeconds;
+    final unchanged = _autoPageActive == desiredActive &&
+        (!desiredActive || _autoPageIntervalSeconds == desiredInterval);
+    if (unchanged) {
+      return;
+    }
+
+    _autoPageTimer?.cancel();
+    _autoPageTimer = null;
+    _autoPageActive = desiredActive;
+    _autoPageIntervalSeconds = desiredInterval;
+    if (!desiredActive) {
+      return;
+    }
+
+    _autoPageTimer = Timer.periodic(
+      Duration(seconds: desiredInterval),
+      (_) => _autoPageTick(),
+    );
+  }
+
+  void _autoPageTick() {
+    if (!mounted) {
+      return;
+    }
+
+    final settings = widget.controller.settings;
+    final moved = settings.autoPageGranularity == ReaderAutoPageGranularity.line
+        ? _advanceReadingInternal(animate: true)
+        : _advanceReadingPage();
+
+    if (moved || !settings.autoPageEnabled) {
+      return;
+    }
+
+    widget.controller.setAutoPageEnabled(false);
+    final l10n = AppLocalizations.of(context);
+    if (l10n != null) {
+      _showMessage(l10n.autoPageReachedEnd);
+    }
+  }
+
+  void _handleAutoPageShortcut() {
+    final controller = widget.controller;
+    final nextEnabled = !controller.settings.autoPageEnabled;
+    controller.setAutoPageEnabled(nextEnabled);
+    final l10n = AppLocalizations.of(context);
+    if (l10n == null) {
+      return;
+    }
+    _showMessage(
+      nextEnabled ? l10n.autoPageOnMessage : l10n.autoPageOffMessage,
+    );
   }
 
   void _rewindReadingPage() {
@@ -577,6 +641,7 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     _messageTimer?.cancel();
     _messageOverlayEntry?.remove();
     _locatorHighlightTimer?.cancel();
+    _autoPageTimer?.cancel();
     if (_windowListenerRegistered) {
       windowManager.removeListener(this);
     }
@@ -587,6 +652,7 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
   Widget build(BuildContext context) {
     final controller = widget.controller;
     final settings = controller.settings;
+    _syncAutoPageTimer();
     final l10n = AppLocalizations.of(context)!;
     final fontSize = readerBaseFontSize * settings.fontScale;
     final lineSpacing = settings.lineSpacing;
@@ -860,6 +926,7 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     addBinding(shortcuts.locateReader, () {
       unawaited(_handleLocateReaderShortcut());
     });
+    addBinding(shortcuts.autoPage, _handleAutoPageShortcut);
 
     return bindings;
   }
@@ -1765,6 +1832,48 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
         title: Text(l10n.punctuationLineBreaksTitle),
         subtitle: Text(l10n.punctuationLineBreaksSubtitle),
       ),
+      SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        value: controller.settings.autoPageEnabled,
+        onChanged: controller.setAutoPageEnabled,
+        title: Text(l10n.autoPageTitle),
+        subtitle: Text(l10n.autoPageSubtitle),
+      ),
+      Text(l10n.autoPageGranularityLabel),
+      const SizedBox(height: 8),
+      SegmentedButton<ReaderAutoPageGranularity>(
+        segments: [
+          ButtonSegment(
+            value: ReaderAutoPageGranularity.page,
+            label: Text(l10n.autoPageGranularityPage),
+          ),
+          ButtonSegment(
+            value: ReaderAutoPageGranularity.line,
+            label: Text(l10n.autoPageGranularityLine),
+          ),
+        ],
+        selected: <ReaderAutoPageGranularity>{
+          controller.settings.autoPageGranularity,
+        },
+        onSelectionChanged: (selection) {
+          controller.setAutoPageGranularity(selection.first);
+        },
+      ),
+      const SizedBox(height: 12),
+      _SliderRow(
+        label: l10n.autoPageIntervalLabel,
+        value: controller.settings.autoPageIntervalSeconds.toDouble(),
+        min: ReaderSettings.minAutoPageIntervalSeconds.toDouble(),
+        max: ReaderSettings.maxAutoPageIntervalSeconds.toDouble(),
+        divisions:
+            ReaderSettings.maxAutoPageIntervalSeconds -
+            ReaderSettings.minAutoPageIntervalSeconds,
+        displayValue: l10n.autoPageIntervalValue(
+          controller.settings.autoPageIntervalSeconds,
+        ),
+        onChanged: (value) =>
+            controller.setAutoPageIntervalSeconds(value.round()),
+      ),
       const SizedBox(height: 12),
       Text(l10n.languageTitle),
       const SizedBox(height: 8),
@@ -2097,6 +2206,7 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
       ReaderShortcutAction.toggleMode => l10n.shortcutToggleMode,
       ReaderShortcutAction.bossKey => l10n.shortcutBossKey,
       ReaderShortcutAction.locateReader => l10n.shortcutLocateReader,
+      ReaderShortcutAction.autoPage => l10n.shortcutAutoPage,
     };
   }
 

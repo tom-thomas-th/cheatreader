@@ -202,5 +202,23 @@
     "placeholders": {
       "value": {}
     }
-  }
+  },
+  "autoPageTitle": "Auto page-turn",
+  "autoPageSubtitle": "Advance automatically on a timer",
+  "autoPageIntervalLabel": "Page interval",
+  "autoPageIntervalValue": "Every {seconds}s",
+  "@autoPageIntervalValue": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "autoPageGranularityLabel": "Advance per tick",
+  "autoPageGranularityPage": "Page",
+  "autoPageGranularityLine": "Line",
+  "shortcutAutoPage": "Auto page-turn",
+  "autoPageOnMessage": "Auto page-turn on",
+  "autoPageOffMessage": "Auto page-turn off",
+  "autoPageReachedEnd": "Reached the end; auto page-turn stopped"
 }
