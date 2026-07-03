@@ -50,6 +50,9 @@ class SharedPreferencesReaderPreferencesStore
   static const _customTextColorValueKey = 'reader.customTextColorValue';
   static const _textBrightnessFactorKey = 'reader.textBrightnessFactor';
   static const _shortcutBindingsKey = 'reader.shortcutBindings';
+  static const _autoPageEnabledKey = 'reader.autoPageEnabled';
+  static const _autoPageIntervalSecondsKey = 'reader.autoPageIntervalSeconds';
+  static const _autoPageGranularityKey = 'reader.autoPageGranularity';
   static const _bookshelfKey = 'reader.bookshelf';
 
   final SharedPreferences _preferences;
@@ -142,6 +145,18 @@ class SharedPreferencesReaderPreferencesStore
               ReaderSettings.defaults.textBrightnessFactor,
         ),
         shortcutBindings: _loadShortcutBindings(),
+        autoPageEnabled:
+            _preferences.getBool(_autoPageEnabledKey) ??
+            ReaderSettings.defaults.autoPageEnabled,
+        autoPageIntervalSeconds: _normalizeAutoPageInterval(
+          _preferences.getInt(_autoPageIntervalSecondsKey) ??
+              ReaderSettings.defaults.autoPageIntervalSeconds,
+        ),
+        autoPageGranularity: _enumByName(
+          ReaderAutoPageGranularity.values,
+          _preferences.getString(_autoPageGranularityKey),
+          ReaderSettings.defaults.autoPageGranularity,
+        ),
       ),
       bookshelf: _loadBookshelf(),
     );
@@ -241,6 +256,15 @@ class SharedPreferencesReaderPreferencesStore
       _shortcutBindingsKey,
       jsonEncode(settings.shortcutBindings.toJson()),
     );
+    await _preferences.setBool(_autoPageEnabledKey, settings.autoPageEnabled);
+    await _preferences.setInt(
+      _autoPageIntervalSecondsKey,
+      _normalizeAutoPageInterval(settings.autoPageIntervalSeconds),
+    );
+    await _preferences.setString(
+      _autoPageGranularityKey,
+      settings.autoPageGranularity.name,
+    );
   }
 
   @override
@@ -327,6 +351,13 @@ class SharedPreferencesReaderPreferencesStore
     return value
         .clamp(ReaderSettings.minFontScale, ReaderSettings.maxFontScale)
         .toDouble();
+  }
+
+  int _normalizeAutoPageInterval(int value) {
+    return value.clamp(
+      ReaderSettings.minAutoPageIntervalSeconds,
+      ReaderSettings.maxAutoPageIntervalSeconds,
+    );
   }
 
   double _normalizeDoubleSetting(

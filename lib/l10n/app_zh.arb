@@ -202,5 +202,23 @@
     "placeholders": {
       "value": {}
     }
-  }
+  },
+  "autoPageTitle": "自动翻页",
+  "autoPageSubtitle": "按设定间隔自动前进",
+  "autoPageIntervalLabel": "翻页间隔",
+  "autoPageIntervalValue": "每 {seconds} 秒",
+  "@autoPageIntervalValue": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "autoPageGranularityLabel": "每次前进",
+  "autoPageGranularityPage": "整页",
+  "autoPageGranularityLine": "逐行",
+  "shortcutAutoPage": "自动翻页",
+  "autoPageOnMessage": "自动翻页已开启",
+  "autoPageOffMessage": "自动翻页已关闭",
+  "autoPageReachedEnd": "已到达结尾，自动翻页已停止"
 }

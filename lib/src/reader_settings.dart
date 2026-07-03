@@ -8,6 +8,8 @@ enum ReaderLanguageMode { system, simplifiedChinese, english }
 
 enum ReaderTextColorMode { adaptive, custom }
 
+enum ReaderAutoPageGranularity { page, line }
+
 class ReaderSettings {
   const ReaderSettings({
     required this.oneLineMode,
@@ -30,6 +32,9 @@ class ReaderSettings {
     required this.customTextColorValue,
     required this.textBrightnessFactor,
     required this.shortcutBindings,
+    required this.autoPageEnabled,
+    required this.autoPageIntervalSeconds,
+    required this.autoPageGranularity,
   });
 
   static const double minTextBrightnessFactor = 0.35;
@@ -44,6 +49,9 @@ class ReaderSettings {
   static const double minWindowOpacity = 0.0;
   static const double maxWindowOpacity = 1.0;
   static const int defaultCustomTextColorValue = 0xFFF4F4F0;
+  static const int minAutoPageIntervalSeconds = 1;
+  static const int maxAutoPageIntervalSeconds = 60;
+  static const int defaultAutoPageIntervalSeconds = 5;
 
   static const ReaderSettings defaults = ReaderSettings(
     oneLineMode: false,
@@ -66,6 +74,9 @@ class ReaderSettings {
     customTextColorValue: defaultCustomTextColorValue,
     textBrightnessFactor: defaultTextBrightnessFactor,
     shortcutBindings: ReaderShortcutBindings.defaults,
+    autoPageEnabled: false,
+    autoPageIntervalSeconds: defaultAutoPageIntervalSeconds,
+    autoPageGranularity: ReaderAutoPageGranularity.page,
   );
 
   final bool oneLineMode;
@@ -88,6 +99,9 @@ class ReaderSettings {
   final int customTextColorValue;
   final double textBrightnessFactor;
   final ReaderShortcutBindings shortcutBindings;
+  final bool autoPageEnabled;
+  final int autoPageIntervalSeconds;
+  final ReaderAutoPageGranularity autoPageGranularity;
 
   static const Object _unset = Object();
 
@@ -112,6 +126,9 @@ class ReaderSettings {
     int? customTextColorValue,
     double? textBrightnessFactor,
     ReaderShortcutBindings? shortcutBindings,
+    bool? autoPageEnabled,
+    int? autoPageIntervalSeconds,
+    ReaderAutoPageGranularity? autoPageGranularity,
   }) {
     return ReaderSettings(
       oneLineMode: oneLineMode ?? this.oneLineMode,
@@ -142,6 +159,10 @@ class ReaderSettings {
       customTextColorValue: customTextColorValue ?? this.customTextColorValue,
       textBrightnessFactor: textBrightnessFactor ?? this.textBrightnessFactor,
       shortcutBindings: shortcutBindings ?? this.shortcutBindings,
+      autoPageEnabled: autoPageEnabled ?? this.autoPageEnabled,
+      autoPageIntervalSeconds:
+          autoPageIntervalSeconds ?? this.autoPageIntervalSeconds,
+      autoPageGranularity: autoPageGranularity ?? this.autoPageGranularity,
     );
   }
 }

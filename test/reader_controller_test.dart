@@ -337,6 +337,59 @@ void main() {
       );
     });
 
+    test('auto page settings persist and clamp the interval', () async {
+      final store = MemoryReaderPreferencesStore();
+      final controller = ReaderController(
+        initialContent: 'One\nTwo\nThree',
+        preferencesStore: store,
+        windowController: FakePlatformWindowController(),
+        fileBookmarkService: FakeReaderFileBookmarkService(),
+        importService: FakeReaderImportService(),
+        libraryStorage: MemoryReaderLibraryStorage(),
+      );
+
+      await controller.initialize();
+
+      expect(controller.settings.autoPageEnabled, isFalse);
+      expect(
+        controller.settings.autoPageIntervalSeconds,
+        ReaderSettings.defaultAutoPageIntervalSeconds,
+      );
+      expect(
+        controller.settings.autoPageGranularity,
+        ReaderAutoPageGranularity.page,
+      );
+
+      controller.setAutoPageEnabled(true);
+      controller.setAutoPageIntervalSeconds(99);
+      controller.setAutoPageGranularity(ReaderAutoPageGranularity.line);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(controller.settings.autoPageEnabled, isTrue);
+      expect(
+        controller.settings.autoPageIntervalSeconds,
+        ReaderSettings.maxAutoPageIntervalSeconds,
+      );
+      expect(
+        controller.settings.autoPageGranularity,
+        ReaderAutoPageGranularity.line,
+      );
+
+      controller.setAutoPageIntervalSeconds(0);
+      expect(
+        controller.settings.autoPageIntervalSeconds,
+        ReaderSettings.minAutoPageIntervalSeconds,
+      );
+
+      final saved = await store.loadSnapshot();
+      expect(saved.settings.autoPageEnabled, isTrue);
+      expect(
+        saved.settings.autoPageIntervalSeconds,
+        ReaderSettings.minAutoPageIntervalSeconds,
+      );
+      expect(saved.settings.autoPageGranularity, ReaderAutoPageGranularity.line);
+    });
+
     test('rejects conflicting shortcut assignments', () async {
       final controller = ReaderController(
         initialContent: 'One\nTwo',
@@ -679,6 +732,9 @@ void main() {
         customTextColorValue: 0xFF0F766E,
         textBrightnessFactor: 0.6,
         shortcutBindings: ReaderShortcutBindings.defaults,
+        autoPageEnabled: true,
+        autoPageIntervalSeconds: 12,
+        autoPageGranularity: ReaderAutoPageGranularity.line,
       );
 
       await store.saveSettings(settings);
@@ -715,6 +771,12 @@ void main() {
       expect(loaded.settings.textBrightnessFactor, 0.6);
       expect(loaded.settings.textColorMode, ReaderTextColorMode.custom);
       expect(loaded.settings.customTextColorValue, 0xFF0F766E);
+      expect(loaded.settings.autoPageEnabled, isTrue);
+      expect(loaded.settings.autoPageIntervalSeconds, 12);
+      expect(
+        loaded.settings.autoPageGranularity,
+        ReaderAutoPageGranularity.line,
+      );
       expect(loaded.bookshelf.single.path, '/tmp/book.txt');
       expect(loaded.bookshelf.single.burnModeEnabled, isFalse);
       expect(loaded.bookshelf.single.fileBookmark, 'bookmark:/tmp/book.txt');

@@ -907,6 +907,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{value}°'**
   String sliderDegrees(Object value);
+
+  /// No description provided for @autoPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto page-turn'**
+  String get autoPageTitle;
+
+  /// No description provided for @autoPageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance automatically on a timer'**
+  String get autoPageSubtitle;
+
+  /// No description provided for @autoPageIntervalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Page interval'**
+  String get autoPageIntervalLabel;
+
+  /// No description provided for @autoPageIntervalValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {seconds}s'**
+  String autoPageIntervalValue(int seconds);
+
+  /// No description provided for @autoPageGranularityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Advance per tick'**
+  String get autoPageGranularityLabel;
+
+  /// No description provided for @autoPageGranularityPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Page'**
+  String get autoPageGranularityPage;
+
+  /// No description provided for @autoPageGranularityLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Line'**
+  String get autoPageGranularityLine;
+
+  /// No description provided for @shortcutAutoPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto page-turn'**
+  String get shortcutAutoPage;
+
+  /// No description provided for @autoPageOnMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto page-turn on'**
+  String get autoPageOnMessage;
+
+  /// No description provided for @autoPageOffMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto page-turn off'**
+  String get autoPageOffMessage;
+
+  /// No description provided for @autoPageReachedEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Reached the end; auto page-turn stopped'**
+  String get autoPageReachedEnd;
 }
 
 class _AppLocalizationsDelegate
