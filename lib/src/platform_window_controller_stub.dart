@@ -19,6 +19,9 @@ class UnsupportedPlatformWindowController implements PlatformWindowController {
   bool get supportsTaskbarIconVisibility => false;
 
   @override
+  bool get supportsTrayIcon => false;
+
+  @override
   Future<void> initialize({ReaderSettings? settings}) async {}
 
   @override

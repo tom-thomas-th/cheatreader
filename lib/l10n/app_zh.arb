@@ -45,7 +45,7 @@
   "alwaysOnTopSupported": "窗口保持浮在最前",
   "alwaysOnTopUnsupported": "当前平台暂不支持",
   "hideTaskbarIconTitle": "隐藏任务栏图标",
-  "hideTaskbarIconSupported": "从任务栏或 Dock 隐藏应用图标",
+  "hideTaskbarIconSupported": "从任务栏隐藏图标，改为显示右下角托盘图标",
   "hideTaskbarIconUnsupported": "当前平台暂不支持",
   "transparentModeTitle": "透明模式",
   "transparentModeSubtitle": "彻底去掉任何底色，只保留文字",
@@ -220,5 +220,7 @@
   "shortcutAutoPage": "自动翻页",
   "autoPageOnMessage": "自动翻页已开启",
   "autoPageOffMessage": "自动翻页已关闭",
-  "autoPageReachedEnd": "已到达结尾，自动翻页已停止"
+  "autoPageReachedEnd": "已到达结尾，自动翻页已停止",
+  "trayIconShowWindow": "显示 CheatReader",
+  "trayIconExit": "退出"
 }

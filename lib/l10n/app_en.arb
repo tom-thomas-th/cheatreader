@@ -45,7 +45,7 @@
   "alwaysOnTopSupported": "Keep the reader floating above other windows",
   "alwaysOnTopUnsupported": "This platform does not support it right now",
   "hideTaskbarIconTitle": "Hide taskbar icon",
-  "hideTaskbarIconSupported": "Hide the app icon from the taskbar or Dock",
+  "hideTaskbarIconSupported": "Hide the app icon from the taskbar; a system tray icon will appear instead",
   "hideTaskbarIconUnsupported": "This platform does not support it right now",
   "transparentModeTitle": "Transparent mode",
   "transparentModeSubtitle": "Remove every background tint and keep text only",
@@ -220,5 +220,7 @@
   "shortcutAutoPage": "Auto page-turn",
   "autoPageOnMessage": "Auto page-turn on",
   "autoPageOffMessage": "Auto page-turn off",
-  "autoPageReachedEnd": "Reached the end; auto page-turn stopped"
+  "autoPageReachedEnd": "Reached the end; auto page-turn stopped",
+  "trayIconShowWindow": "Show CheatReader",
+  "trayIconExit": "Exit"
 }

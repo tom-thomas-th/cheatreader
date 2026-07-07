@@ -51,6 +51,7 @@ dependencies:
   url_launcher: ^6.3.2
   http: ^1.5.0
   intl: any
+  tray_manager: ^0.5.2
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   generate: true
+
+  assets:
+    - assets/tray_icon.ico
+    - assets/tray_icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

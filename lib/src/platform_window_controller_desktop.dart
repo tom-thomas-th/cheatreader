@@ -92,6 +92,9 @@ class DesktopPlatformWindowController implements PlatformWindowController {
   bool get supportsTaskbarIconVisibility => _isSupportedDesktop;
 
   @override
+  bool get supportsTrayIcon => _isSupportedDesktop;
+
+  @override
   Future<void> initialize({ReaderSettings? settings}) async {
     if (!_isSupportedDesktop) {
       return;

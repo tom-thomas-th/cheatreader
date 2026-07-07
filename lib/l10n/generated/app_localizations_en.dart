@@ -122,7 +122,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hideTaskbarIconSupported =>
-      'Hide the app icon from the taskbar or Dock';
+      'Hide the app icon from the taskbar; a system tray icon will appear instead';
 
   @override
   String get hideTaskbarIconUnsupported =>
@@ -495,4 +495,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get autoPageReachedEnd => 'Reached the end; auto page-turn stopped';
+
+  @override
+  String get trayIconShowWindow => 'Show CheatReader';
+
+  @override
+  String get trayIconExit => 'Exit';
 }
