@@ -3,11 +3,13 @@ import 'dart:math' as math;
 
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tray_manager/tray_manager.dart' as tray;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -188,7 +190,8 @@ class ReaderSurface extends StatefulWidget {
   State<ReaderSurface> createState() => _ReaderSurfaceState();
 }
 
-class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
+class _ReaderSurfaceState extends State<ReaderSurface>
+    with WindowListener, tray.TrayListener {
   static const Duration _readerLineTransitionDuration = Duration(
     milliseconds: 90,
   );
@@ -199,6 +202,9 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
   bool _autoPageActive = false;
   int _autoPageIntervalSeconds = ReaderSettings.defaultAutoPageIntervalSeconds;
   bool _windowListenerRegistered = false;
+  bool _trayListenerRegistered = false;
+  bool _trayIconShowing = false;
+  String? _lastTrayMenuLocale;
   bool _locatorHighlightVisible = false;
   DateTime? _lastForegroundRecoveryAt;
   int? _lastOneLineSourceIndex;
@@ -219,6 +225,10 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     if (widget.windowController.supportsFloatingControls) {
       windowManager.addListener(this);
       _windowListenerRegistered = true;
+    }
+    if (widget.windowController.supportsTrayIcon) {
+      tray.trayManager.addListener(this);
+      _trayListenerRegistered = true;
     }
   }
 
@@ -637,6 +647,80 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
   void onWindowMoved() {}
 
   @override
+  void onTrayIconMouseDown() {
+    unawaited(widget.controller.locateReader());
+  }
+
+  @override
+  void onTrayIconRightMouseDown() {
+    if (defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.windows) {
+      unawaited(tray.trayManager.popUpContextMenu());
+    }
+  }
+
+  @override
+  void onTrayMenuItemClick(tray.MenuItem menuItem) {
+    switch (menuItem.key) {
+      case 'show_window':
+        unawaited(widget.controller.locateReader());
+        return;
+      case 'exit_app':
+        _handleExit();
+        return;
+    }
+  }
+
+  Future<void> _syncTrayIcon(AppLocalizations l10n) async {
+    if (!_trayListenerRegistered) {
+      return;
+    }
+
+    final shouldShow = widget.controller.settings.hideTaskbarIcon;
+    final locale = l10n.localeName;
+
+    if (!shouldShow) {
+      if (_trayIconShowing) {
+        _trayIconShowing = false;
+        _lastTrayMenuLocale = null;
+        await tray.trayManager.destroy();
+      }
+      return;
+    }
+
+    if (!_trayIconShowing) {
+      _trayIconShowing = true;
+      await tray.trayManager.setIcon(
+        defaultTargetPlatform == TargetPlatform.windows
+            ? 'assets/tray_icon.ico'
+            : 'assets/tray_icon.png',
+      );
+      if (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.macOS) {
+        await tray.trayManager.setToolTip(l10n.appTitle);
+      }
+    }
+
+    if (_lastTrayMenuLocale != locale) {
+      _lastTrayMenuLocale = locale;
+      final menu = tray.Menu(
+        items: [
+          tray.MenuItem(
+            key: 'show_window',
+            label: l10n.trayIconShowWindow,
+          ),
+          tray.MenuItem.separator(),
+          tray.MenuItem(
+            key: 'exit_app',
+            label: l10n.trayIconExit,
+          ),
+        ],
+      );
+      await tray.trayManager.setContextMenu(menu);
+    }
+  }
+
+  @override
   void dispose() {
     _messageTimer?.cancel();
     _messageOverlayEntry?.remove();
@@ -644,6 +728,10 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     _autoPageTimer?.cancel();
     if (_windowListenerRegistered) {
       windowManager.removeListener(this);
+    }
+    if (_trayListenerRegistered) {
+      tray.trayManager.removeListener(this);
+      tray.trayManager.destroy();
     }
     super.dispose();
   }
@@ -654,6 +742,7 @@ class _ReaderSurfaceState extends State<ReaderSurface> with WindowListener {
     final settings = controller.settings;
     _syncAutoPageTimer();
     final l10n = AppLocalizations.of(context)!;
+    unawaited(_syncTrayIcon(l10n));
     final fontSize = readerBaseFontSize * settings.fontScale;
     final lineSpacing = settings.lineSpacing;
     final verticalPadding = settings.oneLineMode

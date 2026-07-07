@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @hideTaskbarIconSupported.
   ///
   /// In en, this message translates to:
-  /// **'Hide the app icon from the taskbar or Dock'**
+  /// **'Hide the app icon from the taskbar; a system tray icon will appear instead'**
   String get hideTaskbarIconSupported;
 
   /// No description provided for @hideTaskbarIconUnsupported.
@@ -973,6 +973,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reached the end; auto page-turn stopped'**
   String get autoPageReachedEnd;
+
+  /// No description provided for @trayIconShowWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show CheatReader'**
+  String get trayIconShowWindow;
+
+  /// No description provided for @trayIconExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get trayIconExit;
 }
 
 class _AppLocalizationsDelegate

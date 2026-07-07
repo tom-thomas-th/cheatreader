@@ -24,6 +24,8 @@ abstract class PlatformWindowController {
 
   bool get supportsTaskbarIconVisibility;
 
+  bool get supportsTrayIcon;
+
   Future<void> initialize({ReaderSettings? settings});
 
   Future<void> prepareForControlPanel({required Size screenSize});

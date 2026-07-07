@@ -117,7 +117,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get hideTaskbarIconTitle => '隐藏任务栏图标';
 
   @override
-  String get hideTaskbarIconSupported => '从任务栏或 Dock 隐藏应用图标';
+  String get hideTaskbarIconSupported => '从任务栏隐藏图标，改为显示右下角托盘图标';
 
   @override
   String get hideTaskbarIconUnsupported => '当前平台暂不支持';
@@ -475,4 +475,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get autoPageReachedEnd => '已到达结尾，自动翻页已停止';
+
+  @override
+  String get trayIconShowWindow => '显示 CheatReader';
+
+  @override
+  String get trayIconExit => '退出';
 }

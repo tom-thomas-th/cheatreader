@@ -889,6 +889,9 @@ class FakePlatformWindowController implements PlatformWindowController {
   bool get supportsTaskbarIconVisibility => true;
 
   @override
+  bool get supportsTrayIcon => false;
+
+  @override
   Future<void> initialize({ReaderSettings? settings}) async {}
 
   @override
