@@ -134,7 +134,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get appDisguiseNameLabel => '显示名称';
 
   @override
-  String get appDisguiseSubtitle => '只影响窗口标题和托盘身份';
+  String get appDisguiseSubtitle => '影响窗口标题、窗口/任务栏图标和托盘身份';
 
   @override
   String get appDisguisePresetCheatReader => 'CheatReader';

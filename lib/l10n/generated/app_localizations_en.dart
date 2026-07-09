@@ -141,7 +141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appDisguiseSubtitle =>
-      'Updates the window title and tray identity only';
+      'Updates the window title, window/taskbar icon, and tray identity';
 
   @override
   String get appDisguisePresetCheatReader => 'CheatReader';

@@ -72,6 +72,8 @@ bool _settingsMatch(ReaderSettings a, ReaderSettings b) {
   return a.oneLineMode == b.oneLineMode &&
       a.modeToggleTrigger == b.modeToggleTrigger &&
       a.languageMode == b.languageMode &&
+      a.appDisguisePreset == b.appDisguisePreset &&
+      a.customAppDisplayName == b.customAppDisplayName &&
       a.alwaysOnTop == b.alwaysOnTop &&
       a.hideTaskbarIcon == b.hideTaskbarIcon &&
       a.readingAnimationEnabled == b.readingAnimationEnabled &&
@@ -88,5 +90,8 @@ bool _settingsMatch(ReaderSettings a, ReaderSettings b) {
       a.textColorMode == b.textColorMode &&
       a.customTextColorValue == b.customTextColorValue &&
       a.textBrightnessFactor == b.textBrightnessFactor &&
-      a.shortcutBindings == b.shortcutBindings;
+      a.shortcutBindings == b.shortcutBindings &&
+      a.autoPageEnabled == b.autoPageEnabled &&
+      a.autoPageIntervalSeconds == b.autoPageIntervalSeconds &&
+      a.autoPageGranularity == b.autoPageGranularity;
 }

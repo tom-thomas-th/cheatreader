@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @appDisguiseSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Updates the window title and tray identity only'**
+  /// **'Updates the window title, window/taskbar icon, and tray identity'**
   String get appDisguiseSubtitle;
 
   /// No description provided for @appDisguisePresetCheatReader.

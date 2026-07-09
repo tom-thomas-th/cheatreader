@@ -55,7 +55,7 @@
   "appDisguiseTitle": "App disguise",
   "appDisguisePresetLabel": "Preset icon",
   "appDisguiseNameLabel": "Display name",
-  "appDisguiseSubtitle": "Updates the window title and tray identity only",
+  "appDisguiseSubtitle": "Updates the window title, window/taskbar icon, and tray identity",
   "appDisguisePresetCheatReader": "CheatReader",
   "appDisguisePresetCodeEditor": "Code Editor",
   "appDisguisePresetDevStudio": "Dev Studio",

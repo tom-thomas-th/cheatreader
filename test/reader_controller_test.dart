@@ -521,12 +521,15 @@ void main() {
         );
 
         await controller.initialize();
+        expect(controller.shouldShowTrayIcon, isFalse);
         await controller.toggleBossKey();
         expect(controller.isBossKeyHidden, isTrue);
+        expect(controller.shouldShowTrayIcon, isTrue);
         expect(windowController.hideForBossKeyCount, 1);
 
         await controller.toggleBossKey();
         expect(controller.isBossKeyHidden, isFalse);
+        expect(controller.shouldShowTrayIcon, isFalse);
         expect(windowController.restoreFromBossKeyCount, 1);
       },
     );

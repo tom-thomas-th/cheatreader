@@ -680,7 +680,7 @@ class _ReaderSurfaceState extends State<ReaderSurface>
       return;
     }
 
-    final shouldShow = widget.controller.settings.hideTaskbarIcon;
+    final shouldShow = widget.controller.shouldShowTrayIcon;
     final locale = l10n.localeName;
 
     if (!shouldShow) {
@@ -981,7 +981,14 @@ class _ReaderSurfaceState extends State<ReaderSurface>
   }
 
   Future<void> _handleBossKeyShortcut() async {
+    final willHide = !widget.controller.isBossKeyHidden;
+    final l10n = AppLocalizations.of(context);
     await widget.controller.toggleBossKey();
+    if (!willHide || l10n == null) {
+      return;
+    }
+
+    await _syncTrayIcon(l10n);
   }
 
   Future<void> _handleLocateReaderShortcut() async {

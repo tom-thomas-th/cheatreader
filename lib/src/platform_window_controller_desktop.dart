@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -22,6 +23,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
   Size? _rememberedMultiLineSize;
   double? _rememberedOneLineWidth;
   bool _bossKeyHidden = false;
+  String? _lastWindowIconAssetPath;
   bool? _shouldAvoidLinuxModeResizeCache;
 
   bool get _isSupportedDesktop {
@@ -114,8 +116,20 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       windowButtonVisibility: !_useFramelessWindow,
     );
 
-    await windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.setTitle(initialSettings.effectiveAppDisplayName);
+    final readyCompleter = Completer<void>();
+    await windowManager.waitUntilReadyToShow(windowOptions, () {
+      unawaited(_completeReadyWindowSetup(initialSettings, readyCompleter));
+    });
+    await readyCompleter.future;
+  }
+
+  Future<void> _completeReadyWindowSetup(
+    ReaderSettings settings,
+    Completer<void> completer,
+  ) async {
+    try {
+      await windowManager.setTitle(settings.effectiveAppDisplayName);
+      await _syncWindowIcon(settings);
       await windowManager.setResizable(true);
       await windowManager.setMinimumSize(_minimumSize);
       if (_useFramelessWindow) {
@@ -127,7 +141,14 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       }
       await windowManager.show();
       await windowManager.focus();
-    });
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    } catch (error, stackTrace) {
+      if (!completer.isCompleted) {
+        completer.completeError(error, stackTrace);
+      }
+    }
   }
 
   @override
@@ -273,8 +294,9 @@ class DesktopPlatformWindowController implements PlatformWindowController {
 
     _bossKeyHidden = true;
     await windowManager.setAlwaysOnTop(false);
+    await windowManager.setSkipTaskbar(true);
     await windowManager.setIgnoreMouseEvents(true);
-    await windowManager.setOpacity(0.0);
+    await windowManager.hide();
   }
 
   @override
@@ -285,7 +307,6 @@ class DesktopPlatformWindowController implements PlatformWindowController {
 
     _bossKeyHidden = false;
     await windowManager.setIgnoreMouseEvents(false);
-    await windowManager.setOpacity(1.0);
     await syncPresentation(settings);
     await windowManager.show();
     await windowManager.focus();
@@ -327,7 +348,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
     if (_bossKeyHidden) {
       _bossKeyHidden = false;
       await windowManager.setIgnoreMouseEvents(false);
-      await windowManager.setOpacity(1.0);
+      await syncPresentation(settings);
     }
 
     if (_controlPanelRestorePosition != null) {
@@ -364,6 +385,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setHasShadow(false);
     }
     await windowManager.setTitle(settings.effectiveAppDisplayName);
+    await _syncWindowIcon(settings);
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
     await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);
@@ -404,6 +426,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setHasShadow(false);
     }
     await windowManager.setTitle(settings.effectiveAppDisplayName);
+    await _syncWindowIcon(settings);
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
     await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);
@@ -526,6 +549,27 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       currentWidth: currentWidth,
       fontScale: settings.fontScale,
     );
+  }
+
+  Future<void> _syncWindowIcon(ReaderSettings settings) async {
+    if (!_isSupportedDesktop || defaultTargetPlatform == TargetPlatform.macOS) {
+      return;
+    }
+
+    final iconAssetPath = defaultTargetPlatform == TargetPlatform.windows
+        ? settings.effectiveTrayIconIcoAssetPath
+        : settings.effectiveTrayIconPngAssetPath;
+    if (_lastWindowIconAssetPath == iconAssetPath) {
+      return;
+    }
+
+    try {
+      await windowManager.setIcon(iconAssetPath);
+      _lastWindowIconAssetPath = iconAssetPath;
+    } catch (_) {
+      // Some desktops do not support runtime window icon changes. Keep the
+      // rest of the presentation sync best-effort instead of blocking startup.
+    }
   }
 
   bool get _isX11Session {

@@ -59,6 +59,7 @@ class ReaderController extends ChangeNotifier {
       List<ReaderBookRecord>.unmodifiable(_bookshelf);
   bool get dragTargetActive => _dragTargetActive;
   bool get isBossKeyHidden => _bossKeyHidden;
+  bool get shouldShowTrayIcon => _settings.hideTaskbarIcon || _bossKeyHidden;
   String get currentDisplayName => _currentDisplayName;
   bool get hasImportedBook => _currentBookPath != null;
   ReaderBookRecord? get currentBook => _findBookRecord(_currentBookPath);
@@ -434,12 +435,13 @@ class ReaderController extends ChangeNotifier {
 
     if (_bossKeyHidden) {
       _bossKeyHidden = false;
+      notifyListeners();
       await _windowController.restoreFromBossKey(_settings);
     } else {
       _bossKeyHidden = true;
+      notifyListeners();
       await _windowController.hideForBossKey(_settings);
     }
-    notifyListeners();
   }
 
   Future<void> locateReader() async {

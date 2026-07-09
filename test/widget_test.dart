@@ -571,6 +571,7 @@ void main() {
     await tester.pump();
 
     expect(windowController.hideForBossKeyCount, 1);
+    expect(controller.shouldShowTrayIcon, isTrue);
   });
 
   testWidgets('english language mode localizes the control panel', (
