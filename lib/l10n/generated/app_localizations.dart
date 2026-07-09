@@ -161,8 +161,8 @@ abstract class AppLocalizations {
   /// No description provided for @controlPanelTitle.
   ///
   /// In en, this message translates to:
-  /// **'CheatReader Control Panel'**
-  String get controlPanelTitle;
+  /// **'{appName} Control Panel'**
+  String controlPanelTitle(Object appName);
 
   /// No description provided for @importEbook.
   ///
@@ -313,6 +313,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This platform does not support it right now'**
   String get hideTaskbarIconUnsupported;
+
+  /// No description provided for @appDisguiseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App disguise'**
+  String get appDisguiseTitle;
+
+  /// No description provided for @appDisguisePresetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Preset icon'**
+  String get appDisguisePresetLabel;
+
+  /// No description provided for @appDisguiseNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Display name'**
+  String get appDisguiseNameLabel;
+
+  /// No description provided for @appDisguiseSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates the window title and tray identity only'**
+  String get appDisguiseSubtitle;
+
+  /// No description provided for @appDisguisePresetCheatReader.
+  ///
+  /// In en, this message translates to:
+  /// **'CheatReader'**
+  String get appDisguisePresetCheatReader;
+
+  /// No description provided for @appDisguisePresetCodeEditor.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Editor'**
+  String get appDisguisePresetCodeEditor;
+
+  /// No description provided for @appDisguisePresetDevStudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Dev Studio'**
+  String get appDisguisePresetDevStudio;
+
+  /// No description provided for @appDisguisePresetTerminal.
+  ///
+  /// In en, this message translates to:
+  /// **'Terminal'**
+  String get appDisguisePresetTerminal;
+
+  /// No description provided for @appDisguisePresetNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get appDisguisePresetNotes;
 
   /// No description provided for @transparentModeTitle.
   ///
@@ -977,8 +1031,8 @@ abstract class AppLocalizations {
   /// No description provided for @trayIconShowWindow.
   ///
   /// In en, this message translates to:
-  /// **'Show CheatReader'**
-  String get trayIconShowWindow;
+  /// **'Show {appName}'**
+  String trayIconShowWindow(Object appName);
 
   /// No description provided for @trayIconExit.
   ///

@@ -202,6 +202,8 @@ void main() {
       controller.toggleOneLineMode();
       controller.setModeToggleTrigger(ReaderModeToggleTrigger.middleClick);
       controller.setLanguageMode(ReaderLanguageMode.english);
+      controller.setAppDisguisePreset(ReaderAppDisguisePreset.terminal);
+      controller.setCustomAppDisplayName('Work Terminal');
       controller.setFontFamilyPreset(ReaderFontFamilyPreset.monospace);
       controller.setReadingAnimationEnabled(true);
       controller.setCustomFont(
@@ -233,6 +235,12 @@ void main() {
         ReaderModeToggleTrigger.middleClick,
       );
       expect(saved.settings.languageMode, ReaderLanguageMode.english);
+      expect(
+        saved.settings.appDisguisePreset,
+        ReaderAppDisguisePreset.terminal,
+      );
+      expect(saved.settings.customAppDisplayName, 'Work Terminal');
+      expect(saved.settings.effectiveAppDisplayName, 'Work Terminal');
       expect(saved.settings.fontFamilyPreset, ReaderFontFamilyPreset.custom);
       expect(saved.settings.readingAnimationEnabled, isTrue);
       expect(saved.settings.customFontPath, '/tmp/fonts/demo.ttf');
@@ -258,6 +266,14 @@ void main() {
       expect(
         windowController.syncedSettings?.languageMode,
         ReaderLanguageMode.english,
+      );
+      expect(
+        windowController.syncedSettings?.appDisguisePreset,
+        ReaderAppDisguisePreset.terminal,
+      );
+      expect(
+        windowController.syncedSettings?.customAppDisplayName,
+        'Work Terminal',
       );
       expect(
         windowController.syncedSettings?.fontFamilyPreset,
@@ -387,7 +403,33 @@ void main() {
         saved.settings.autoPageIntervalSeconds,
         ReaderSettings.minAutoPageIntervalSeconds,
       );
-      expect(saved.settings.autoPageGranularity, ReaderAutoPageGranularity.line);
+      expect(
+        saved.settings.autoPageGranularity,
+        ReaderAutoPageGranularity.line,
+      );
+    });
+
+    test('preset app display names remain preset-managed', () async {
+      final controller = ReaderController(
+        initialContent: 'One\nTwo',
+        preferencesStore: MemoryReaderPreferencesStore(),
+        windowController: FakePlatformWindowController(),
+        fileBookmarkService: FakeReaderFileBookmarkService(),
+        importService: FakeReaderImportService(),
+        libraryStorage: MemoryReaderLibraryStorage(),
+      );
+
+      await controller.initialize();
+      controller.setAppDisguisePreset(ReaderAppDisguisePreset.terminal);
+      controller.setCustomAppDisplayName('Terminal');
+
+      expect(controller.settings.customAppDisplayName, isNull);
+      expect(controller.settings.effectiveAppDisplayName, 'Terminal');
+
+      controller.setAppDisguisePreset(ReaderAppDisguisePreset.notes);
+
+      expect(controller.settings.customAppDisplayName, isNull);
+      expect(controller.settings.effectiveAppDisplayName, 'Notes');
     });
 
     test('rejects conflicting shortcut assignments', () async {
@@ -715,6 +757,8 @@ void main() {
         oneLineMode: true,
         modeToggleTrigger: ReaderModeToggleTrigger.keyboardShortcut,
         languageMode: ReaderLanguageMode.english,
+        appDisguisePreset: ReaderAppDisguisePreset.devStudio,
+        customAppDisplayName: 'Research IDE',
         alwaysOnTop: false,
         hideTaskbarIcon: true,
         readingAnimationEnabled: true,
@@ -756,6 +800,11 @@ void main() {
         loaded.settings.modeToggleTrigger,
         ReaderModeToggleTrigger.keyboardShortcut,
       );
+      expect(
+        loaded.settings.appDisguisePreset,
+        ReaderAppDisguisePreset.devStudio,
+      );
+      expect(loaded.settings.customAppDisplayName, 'Research IDE');
       expect(loaded.settings.alwaysOnTop, isFalse);
       expect(loaded.settings.hideTaskbarIcon, isTrue);
       expect(loaded.settings.preferPunctuationLineBreaks, isFalse);

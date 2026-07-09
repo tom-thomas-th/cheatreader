@@ -10,7 +10,12 @@
   "importFailure": "无法导入该电子书文件",
   "importUnsupportedFormat": "仅支持导入 txt / epub / html / md / fb2 / docx / pdf",
   "dropPrompt": "拖入 txt / epub / html / md / fb2 / docx / pdf 开始阅读",
-  "controlPanelTitle": "CheatReader 控制面板",
+  "controlPanelTitle": "{appName} 控制面板",
+  "@controlPanelTitle": {
+    "placeholders": {
+      "appName": {}
+    }
+  },
   "importEbook": "导入电子书",
   "quitReader": "退出阅读器",
   "bookshelfTitle": "简单书架",
@@ -47,6 +52,15 @@
   "hideTaskbarIconTitle": "隐藏任务栏图标",
   "hideTaskbarIconSupported": "从任务栏隐藏图标，改为显示右下角托盘图标",
   "hideTaskbarIconUnsupported": "当前平台暂不支持",
+  "appDisguiseTitle": "应用伪装",
+  "appDisguisePresetLabel": "预设图标",
+  "appDisguiseNameLabel": "显示名称",
+  "appDisguiseSubtitle": "只影响窗口标题和托盘身份",
+  "appDisguisePresetCheatReader": "CheatReader",
+  "appDisguisePresetCodeEditor": "Code Editor",
+  "appDisguisePresetDevStudio": "Dev Studio",
+  "appDisguisePresetTerminal": "Terminal",
+  "appDisguisePresetNotes": "Notes",
   "transparentModeTitle": "透明模式",
   "transparentModeSubtitle": "彻底去掉任何底色，只保留文字",
   "transparentTextShadowTitle": "透明模式文字描边",
@@ -221,6 +235,11 @@
   "autoPageOnMessage": "自动翻页已开启",
   "autoPageOffMessage": "自动翻页已关闭",
   "autoPageReachedEnd": "已到达结尾，自动翻页已停止",
-  "trayIconShowWindow": "显示 CheatReader",
+  "trayIconShowWindow": "显示 {appName}",
+  "@trayIconShowWindow": {
+    "placeholders": {
+      "appName": {}
+    }
+  },
   "trayIconExit": "退出"
 }

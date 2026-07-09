@@ -141,7 +141,8 @@ class CheatReaderApp extends StatelessWidget {
         );
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (context) =>
+              controller.settings.effectiveAppDisplayName,
           locale: locale,
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -205,6 +206,8 @@ class _ReaderSurfaceState extends State<ReaderSurface>
   bool _trayListenerRegistered = false;
   bool _trayIconShowing = false;
   String? _lastTrayMenuLocale;
+  String? _lastTrayIconAssetPath;
+  String? _lastTrayTooltip;
   bool _locatorHighlightVisible = false;
   DateTime? _lastForegroundRecoveryAt;
   int? _lastOneLineSourceIndex;
@@ -549,7 +552,8 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     final settings = widget.controller.settings;
     final desiredActive = settings.autoPageEnabled;
     final desiredInterval = settings.autoPageIntervalSeconds;
-    final unchanged = _autoPageActive == desiredActive &&
+    final unchanged =
+        _autoPageActive == desiredActive &&
         (!desiredActive || _autoPageIntervalSeconds == desiredInterval);
     if (unchanged) {
       return;
@@ -683,37 +687,43 @@ class _ReaderSurfaceState extends State<ReaderSurface>
       if (_trayIconShowing) {
         _trayIconShowing = false;
         _lastTrayMenuLocale = null;
+        _lastTrayIconAssetPath = null;
+        _lastTrayTooltip = null;
         await tray.trayManager.destroy();
       }
       return;
     }
 
-    if (!_trayIconShowing) {
+    final appDisplayName = widget.controller.settings.effectiveAppDisplayName;
+    final iconAssetPath = defaultTargetPlatform == TargetPlatform.windows
+        ? widget.controller.settings.effectiveTrayIconIcoAssetPath
+        : widget.controller.settings.effectiveTrayIconPngAssetPath;
+
+    if (!_trayIconShowing || _lastTrayIconAssetPath != iconAssetPath) {
+      await tray.trayManager.setIcon(iconAssetPath);
       _trayIconShowing = true;
-      await tray.trayManager.setIcon(
-        defaultTargetPlatform == TargetPlatform.windows
-            ? 'assets/tray_icon.ico'
-            : 'assets/tray_icon.png',
-      );
+      _lastTrayIconAssetPath = iconAssetPath;
+    }
+
+    if (_lastTrayTooltip != appDisplayName) {
+      _lastTrayTooltip = appDisplayName;
       if (defaultTargetPlatform == TargetPlatform.windows ||
           defaultTargetPlatform == TargetPlatform.macOS) {
-        await tray.trayManager.setToolTip(l10n.appTitle);
+        await tray.trayManager.setToolTip(appDisplayName);
       }
     }
 
-    if (_lastTrayMenuLocale != locale) {
-      _lastTrayMenuLocale = locale;
+    final trayMenuCacheKey = '$locale|$appDisplayName';
+    if (_lastTrayMenuLocale != trayMenuCacheKey) {
+      _lastTrayMenuLocale = trayMenuCacheKey;
       final menu = tray.Menu(
         items: [
           tray.MenuItem(
             key: 'show_window',
-            label: l10n.trayIconShowWindow,
+            label: l10n.trayIconShowWindow(appDisplayName),
           ),
           tray.MenuItem.separator(),
-          tray.MenuItem(
-            key: 'exit_app',
-            label: l10n.trayIconExit,
-          ),
+          tray.MenuItem(key: 'exit_app', label: l10n.trayIconExit),
         ],
       );
       await tray.trayManager.setContextMenu(menu);
@@ -1357,14 +1367,18 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
   late final TextEditingController _percentJumpController =
       TextEditingController();
   late final TextEditingController _searchController = TextEditingController();
+  late final TextEditingController _appDisplayNameController =
+      TextEditingController();
   String? _appVersion;
   bool _isCheckingLatestVersion = false;
   String? _lastSearchQuery;
   int? _lastSearchMatchIndex;
+  String? _lastSyncedAppDisplayName;
 
   @override
   void initState() {
     super.initState();
+    _syncAppDisplayNameController();
     unawaited(_loadAppVersion());
   }
 
@@ -1607,7 +1621,19 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
     _pageJumpController.dispose();
     _percentJumpController.dispose();
     _searchController.dispose();
+    _appDisplayNameController.dispose();
     super.dispose();
+  }
+
+  void _syncAppDisplayNameController() {
+    final settings = widget.controller.settings;
+    final value =
+        settings.customAppDisplayName ?? settings.appDisguisePreset.displayName;
+    if (_lastSyncedAppDisplayName == value) {
+      return;
+    }
+    _lastSyncedAppDisplayName = value;
+    _appDisplayNameController.text = value;
   }
 
   void _submitLineJump(BuildContext context) {
@@ -1701,6 +1727,7 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
     final windowController = widget.windowController;
     final l10n = AppLocalizations.of(context)!;
     final settings = controller.settings;
+    _syncAppDisplayNameController();
     final readerPresentation = _resolveReaderPresentation(settings);
     final customTextColor = Color(settings.customTextColorValue);
     final customTextColorHsl = HSLColor.fromColor(customTextColor);
@@ -1893,6 +1920,86 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
               : l10n.hideTaskbarIconUnsupported,
         ),
       ),
+      const SizedBox(height: 8),
+      Text(
+        l10n.appDisguiseTitle,
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(color: Colors.white),
+      ),
+      const SizedBox(height: 8),
+      DropdownButtonFormField<ReaderAppDisguisePreset>(
+        initialValue: settings.appDisguisePreset,
+        decoration: InputDecoration(
+          labelText: l10n.appDisguisePresetLabel,
+          isDense: true,
+          filled: true,
+          fillColor: const Color(0xFF17191F),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF7F8A99)),
+          ),
+        ),
+        dropdownColor: const Color(0xFF22262C),
+        items: [
+          for (final preset in ReaderAppDisguisePreset.values)
+            DropdownMenuItem(
+              value: preset,
+              child: Text(_appDisguisePresetLabel(l10n, preset)),
+            ),
+        ],
+        onChanged: (value) {
+          if (value == null) {
+            return;
+          }
+          controller.setAppDisguisePreset(value);
+          if (settings.customAppDisplayName == null ||
+              settings.customAppDisplayName!.trim().isEmpty) {
+            _lastSyncedAppDisplayName = value.displayName;
+            _appDisplayNameController.text = value.displayName;
+          }
+        },
+      ),
+      const SizedBox(height: 10),
+      TextField(
+        controller: _appDisplayNameController,
+        textInputAction: TextInputAction.done,
+        maxLength: 32,
+        onSubmitted: controller.setCustomAppDisplayName,
+        onEditingComplete: () {
+          controller.setCustomAppDisplayName(_appDisplayNameController.text);
+          FocusScope.of(context).unfocus();
+        },
+        decoration: InputDecoration(
+          labelText: l10n.appDisguiseNameLabel,
+          helperText: l10n.appDisguiseSubtitle,
+          counterText: '',
+          isDense: true,
+          filled: true,
+          fillColor: const Color(0xFF17191F),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Color(0xFF7F8A99)),
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
       SwitchListTile(
         contentPadding: EdgeInsets.zero,
         value: controller.settings.transparentModeEnabled,
@@ -2283,6 +2390,19 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
     };
   }
 
+  String _appDisguisePresetLabel(
+    AppLocalizations l10n,
+    ReaderAppDisguisePreset preset,
+  ) {
+    return switch (preset) {
+      ReaderAppDisguisePreset.cheatReader => l10n.appDisguisePresetCheatReader,
+      ReaderAppDisguisePreset.codeEditor => l10n.appDisguisePresetCodeEditor,
+      ReaderAppDisguisePreset.devStudio => l10n.appDisguisePresetDevStudio,
+      ReaderAppDisguisePreset.terminal => l10n.appDisguisePresetTerminal,
+      ReaderAppDisguisePreset.notes => l10n.appDisguisePresetNotes,
+    };
+  }
+
   String _shortcutActionLabel(
     AppLocalizations l10n,
     ReaderShortcutAction action,
@@ -2338,6 +2458,9 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
           220.0,
           math.min(640.0, viewportSize.height - 64),
         );
+        final controlPanelTitle = l10n.controlPanelTitle(
+          widget.controller.settings.effectiveAppDisplayName,
+        );
         final sectionChildren = _buildPanelSections(context);
 
         return Dialog(
@@ -2362,7 +2485,7 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
                           children: [
                             Expanded(
                               child: Text(
-                                l10n.controlPanelTitle,
+                                controlPanelTitle,
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(color: Colors.white),
                               ),
@@ -2420,7 +2543,7 @@ class _ReaderControlPanelState extends State<_ReaderControlPanel> {
                         children: [
                           Expanded(
                             child: Text(
-                              l10n.controlPanelTitle,
+                              controlPanelTitle,
                               style: Theme.of(context).textTheme.titleLarge
                                   ?.copyWith(color: Colors.white),
                             ),

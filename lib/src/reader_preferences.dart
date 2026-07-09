@@ -31,6 +31,8 @@ class SharedPreferencesReaderPreferencesStore
   static const _oneLineModeKey = 'reader.oneLineMode';
   static const _modeToggleTriggerKey = 'reader.modeToggleTrigger';
   static const _languageModeKey = 'reader.languageMode';
+  static const _appDisguisePresetKey = 'reader.appDisguisePreset';
+  static const _customAppDisplayNameKey = 'reader.customAppDisplayName';
   static const _alwaysOnTopKey = 'reader.alwaysOnTop';
   static const _hideTaskbarIconKey = 'reader.hideTaskbarIcon';
   static const _readingAnimationEnabledKey = 'reader.readingAnimationEnabled';
@@ -79,6 +81,12 @@ class SharedPreferencesReaderPreferencesStore
           _preferences.getString(_languageModeKey),
           ReaderSettings.defaults.languageMode,
         ),
+        appDisguisePreset: _enumByName(
+          ReaderAppDisguisePreset.values,
+          _preferences.getString(_appDisguisePresetKey),
+          ReaderSettings.defaults.appDisguisePreset,
+        ),
+        customAppDisplayName: _preferences.getString(_customAppDisplayNameKey),
         alwaysOnTop:
             _preferences.getBool(_alwaysOnTopKey) ??
             ReaderSettings.defaults.alwaysOnTop,
@@ -170,6 +178,19 @@ class SharedPreferencesReaderPreferencesStore
       settings.modeToggleTrigger.name,
     );
     await _preferences.setString(_languageModeKey, settings.languageMode.name);
+    await _preferences.setString(
+      _appDisguisePresetKey,
+      settings.appDisguisePreset.name,
+    );
+    if (settings.customAppDisplayName == null ||
+        settings.customAppDisplayName!.trim().isEmpty) {
+      await _preferences.remove(_customAppDisplayNameKey);
+    } else {
+      await _preferences.setString(
+        _customAppDisplayNameKey,
+        settings.customAppDisplayName!.trim(),
+      );
+    }
     await _preferences.setBool(_alwaysOnTopKey, settings.alwaysOnTop);
     await _preferences.setBool(_hideTaskbarIconKey, settings.hideTaskbarIcon);
     await _preferences.setBool(

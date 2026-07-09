@@ -41,7 +41,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dropPrompt => '拖入 txt / epub / html / md / fb2 / docx / pdf 开始阅读';
 
   @override
-  String get controlPanelTitle => 'CheatReader 控制面板';
+  String controlPanelTitle(Object appName) {
+    return '$appName 控制面板';
+  }
 
   @override
   String get importEbook => '导入电子书';
@@ -121,6 +123,33 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get hideTaskbarIconUnsupported => '当前平台暂不支持';
+
+  @override
+  String get appDisguiseTitle => '应用伪装';
+
+  @override
+  String get appDisguisePresetLabel => '预设图标';
+
+  @override
+  String get appDisguiseNameLabel => '显示名称';
+
+  @override
+  String get appDisguiseSubtitle => '只影响窗口标题和托盘身份';
+
+  @override
+  String get appDisguisePresetCheatReader => 'CheatReader';
+
+  @override
+  String get appDisguisePresetCodeEditor => 'Code Editor';
+
+  @override
+  String get appDisguisePresetDevStudio => 'Dev Studio';
+
+  @override
+  String get appDisguisePresetTerminal => 'Terminal';
+
+  @override
+  String get appDisguisePresetNotes => 'Notes';
 
   @override
   String get transparentModeTitle => '透明模式';
@@ -477,7 +506,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get autoPageReachedEnd => '已到达结尾，自动翻页已停止';
 
   @override
-  String get trayIconShowWindow => '显示 CheatReader';
+  String trayIconShowWindow(Object appName) {
+    return '显示 $appName';
+  }
 
   @override
   String get trayIconExit => '退出';

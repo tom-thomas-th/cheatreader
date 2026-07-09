@@ -235,6 +235,24 @@ class ReaderController extends ChangeNotifier {
     _updateSettings(_settings.copyWith(languageMode: value));
   }
 
+  void setAppDisguisePreset(ReaderAppDisguisePreset value) {
+    _updateSettings(_settings.copyWith(appDisguisePreset: value));
+  }
+
+  void setCustomAppDisplayName(String value) {
+    final normalizedName = value.trim();
+    final customName = normalizedName == _settings.appDisguisePreset.displayName
+        ? null
+        : normalizedName;
+    _updateSettings(
+      _settings.copyWith(
+        customAppDisplayName: customName == null || customName.isEmpty
+            ? null
+            : customName,
+      ),
+    );
+  }
+
   void toggleBurnMode() {
     // Temporarily disabled until the feature is redesigned.
   }
@@ -538,6 +556,8 @@ class ReaderController extends ChangeNotifier {
     if (_settings.oneLineMode == value.oneLineMode &&
         _settings.modeToggleTrigger == value.modeToggleTrigger &&
         _settings.languageMode == value.languageMode &&
+        _settings.appDisguisePreset == value.appDisguisePreset &&
+        _settings.customAppDisplayName == value.customAppDisplayName &&
         _settings.alwaysOnTop == value.alwaysOnTop &&
         _settings.hideTaskbarIcon == value.hideTaskbarIcon &&
         _settings.readingAnimationEnabled == value.readingAnimationEnabled &&

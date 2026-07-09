@@ -10,11 +10,53 @@ enum ReaderTextColorMode { adaptive, custom }
 
 enum ReaderAutoPageGranularity { page, line }
 
+enum ReaderAppDisguisePreset {
+  cheatReader,
+  codeEditor,
+  devStudio,
+  terminal,
+  notes,
+}
+
+extension ReaderAppDisguisePresetDetails on ReaderAppDisguisePreset {
+  String get displayName {
+    return switch (this) {
+      ReaderAppDisguisePreset.cheatReader => 'CheatReader',
+      ReaderAppDisguisePreset.codeEditor => 'Code Editor',
+      ReaderAppDisguisePreset.devStudio => 'Dev Studio',
+      ReaderAppDisguisePreset.terminal => 'Terminal',
+      ReaderAppDisguisePreset.notes => 'Notes',
+    };
+  }
+
+  String get pngAssetPath {
+    return switch (this) {
+      ReaderAppDisguisePreset.cheatReader => 'assets/tray_icon.png',
+      ReaderAppDisguisePreset.codeEditor => 'assets/disguise/code_editor.png',
+      ReaderAppDisguisePreset.devStudio => 'assets/disguise/dev_studio.png',
+      ReaderAppDisguisePreset.terminal => 'assets/disguise/terminal.png',
+      ReaderAppDisguisePreset.notes => 'assets/disguise/notes.png',
+    };
+  }
+
+  String get icoAssetPath {
+    return switch (this) {
+      ReaderAppDisguisePreset.cheatReader => 'assets/tray_icon.ico',
+      ReaderAppDisguisePreset.codeEditor => 'assets/disguise/code_editor.ico',
+      ReaderAppDisguisePreset.devStudio => 'assets/disguise/dev_studio.ico',
+      ReaderAppDisguisePreset.terminal => 'assets/disguise/terminal.ico',
+      ReaderAppDisguisePreset.notes => 'assets/disguise/notes.ico',
+    };
+  }
+}
+
 class ReaderSettings {
   const ReaderSettings({
     required this.oneLineMode,
     required this.modeToggleTrigger,
     required this.languageMode,
+    required this.appDisguisePreset,
+    required this.customAppDisplayName,
     required this.alwaysOnTop,
     required this.hideTaskbarIcon,
     required this.readingAnimationEnabled,
@@ -57,6 +99,8 @@ class ReaderSettings {
     oneLineMode: false,
     modeToggleTrigger: ReaderModeToggleTrigger.doubleClick,
     languageMode: ReaderLanguageMode.system,
+    appDisguisePreset: ReaderAppDisguisePreset.cheatReader,
+    customAppDisplayName: null,
     alwaysOnTop: false,
     hideTaskbarIcon: false,
     readingAnimationEnabled: false,
@@ -82,6 +126,8 @@ class ReaderSettings {
   final bool oneLineMode;
   final ReaderModeToggleTrigger modeToggleTrigger;
   final ReaderLanguageMode languageMode;
+  final ReaderAppDisguisePreset appDisguisePreset;
+  final String? customAppDisplayName;
   final bool alwaysOnTop;
   final bool hideTaskbarIcon;
   final bool readingAnimationEnabled;
@@ -109,6 +155,8 @@ class ReaderSettings {
     bool? oneLineMode,
     ReaderModeToggleTrigger? modeToggleTrigger,
     ReaderLanguageMode? languageMode,
+    ReaderAppDisguisePreset? appDisguisePreset,
+    Object? customAppDisplayName = _unset,
     bool? alwaysOnTop,
     bool? hideTaskbarIcon,
     bool? readingAnimationEnabled,
@@ -134,6 +182,10 @@ class ReaderSettings {
       oneLineMode: oneLineMode ?? this.oneLineMode,
       modeToggleTrigger: modeToggleTrigger ?? this.modeToggleTrigger,
       languageMode: languageMode ?? this.languageMode,
+      appDisguisePreset: appDisguisePreset ?? this.appDisguisePreset,
+      customAppDisplayName: identical(customAppDisplayName, _unset)
+          ? this.customAppDisplayName
+          : customAppDisplayName as String?,
       alwaysOnTop: alwaysOnTop ?? this.alwaysOnTop,
       hideTaskbarIcon: hideTaskbarIcon ?? this.hideTaskbarIcon,
       readingAnimationEnabled:
@@ -165,4 +217,16 @@ class ReaderSettings {
       autoPageGranularity: autoPageGranularity ?? this.autoPageGranularity,
     );
   }
+
+  String get effectiveAppDisplayName {
+    final customName = customAppDisplayName?.trim();
+    if (customName != null && customName.isNotEmpty) {
+      return customName;
+    }
+    return appDisguisePreset.displayName;
+  }
+
+  String get effectiveTrayIconPngAssetPath => appDisguisePreset.pngAssetPath;
+
+  String get effectiveTrayIconIcoAssetPath => appDisguisePreset.icoAssetPath;
 }

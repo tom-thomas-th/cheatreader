@@ -10,7 +10,12 @@
   "importFailure": "Could not import this ebook file",
   "importUnsupportedFormat": "Only txt / epub / html / md / fb2 / docx / pdf are supported",
   "dropPrompt": "Drop txt / epub / html / md / fb2 / docx / pdf here to start reading",
-  "controlPanelTitle": "CheatReader Control Panel",
+  "controlPanelTitle": "{appName} Control Panel",
+  "@controlPanelTitle": {
+    "placeholders": {
+      "appName": {}
+    }
+  },
   "importEbook": "Import ebook",
   "quitReader": "Quit reader",
   "bookshelfTitle": "Bookshelf",
@@ -47,6 +52,15 @@
   "hideTaskbarIconTitle": "Hide taskbar icon",
   "hideTaskbarIconSupported": "Hide the app icon from the taskbar; a system tray icon will appear instead",
   "hideTaskbarIconUnsupported": "This platform does not support it right now",
+  "appDisguiseTitle": "App disguise",
+  "appDisguisePresetLabel": "Preset icon",
+  "appDisguiseNameLabel": "Display name",
+  "appDisguiseSubtitle": "Updates the window title and tray identity only",
+  "appDisguisePresetCheatReader": "CheatReader",
+  "appDisguisePresetCodeEditor": "Code Editor",
+  "appDisguisePresetDevStudio": "Dev Studio",
+  "appDisguisePresetTerminal": "Terminal",
+  "appDisguisePresetNotes": "Notes",
   "transparentModeTitle": "Transparent mode",
   "transparentModeSubtitle": "Remove every background tint and keep text only",
   "transparentTextShadowTitle": "Text outline in transparent mode",
@@ -221,6 +235,11 @@
   "autoPageOnMessage": "Auto page-turn on",
   "autoPageOffMessage": "Auto page-turn off",
   "autoPageReachedEnd": "Reached the end; auto page-turn stopped",
-  "trayIconShowWindow": "Show CheatReader",
+  "trayIconShowWindow": "Show {appName}",
+  "@trayIconShowWindow": {
+    "placeholders": {
+      "appName": {}
+    }
+  },
   "trayIconExit": "Exit"
 }

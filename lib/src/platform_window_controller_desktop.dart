@@ -115,7 +115,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
     );
 
     await windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.setTitle('CheatReader');
+      await windowManager.setTitle(initialSettings.effectiveAppDisplayName);
       await windowManager.setResizable(true);
       await windowManager.setMinimumSize(_minimumSize);
       if (_useFramelessWindow) {
@@ -363,6 +363,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setAsFrameless();
       await windowManager.setHasShadow(false);
     }
+    await windowManager.setTitle(settings.effectiveAppDisplayName);
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
     await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);
@@ -402,6 +403,7 @@ class DesktopPlatformWindowController implements PlatformWindowController {
       await windowManager.setAsFrameless();
       await windowManager.setHasShadow(false);
     }
+    await windowManager.setTitle(settings.effectiveAppDisplayName);
     await windowManager.setAlwaysOnTop(settings.alwaysOnTop);
     await windowManager.setSkipTaskbar(settings.hideTaskbarIcon);
     await windowManager.setOpacity(1.0);

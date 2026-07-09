@@ -42,7 +42,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Drop txt / epub / html / md / fb2 / docx / pdf here to start reading';
 
   @override
-  String get controlPanelTitle => 'CheatReader Control Panel';
+  String controlPanelTitle(Object appName) {
+    return '$appName Control Panel';
+  }
 
   @override
   String get importEbook => 'Import ebook';
@@ -127,6 +129,34 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get hideTaskbarIconUnsupported =>
       'This platform does not support it right now';
+
+  @override
+  String get appDisguiseTitle => 'App disguise';
+
+  @override
+  String get appDisguisePresetLabel => 'Preset icon';
+
+  @override
+  String get appDisguiseNameLabel => 'Display name';
+
+  @override
+  String get appDisguiseSubtitle =>
+      'Updates the window title and tray identity only';
+
+  @override
+  String get appDisguisePresetCheatReader => 'CheatReader';
+
+  @override
+  String get appDisguisePresetCodeEditor => 'Code Editor';
+
+  @override
+  String get appDisguisePresetDevStudio => 'Dev Studio';
+
+  @override
+  String get appDisguisePresetTerminal => 'Terminal';
+
+  @override
+  String get appDisguisePresetNotes => 'Notes';
 
   @override
   String get transparentModeTitle => 'Transparent mode';
@@ -497,7 +527,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoPageReachedEnd => 'Reached the end; auto page-turn stopped';
 
   @override
-  String get trayIconShowWindow => 'Show CheatReader';
+  String trayIconShowWindow(Object appName) {
+    return 'Show $appName';
+  }
 
   @override
   String get trayIconExit => 'Exit';

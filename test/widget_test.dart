@@ -617,6 +617,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Reading Settings'), findsOneWidget);
     await tester.scrollUntilVisible(
+      find.text('App disguise'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('App disguise'), findsOneWidget);
+    expect(find.text('Preset icon'), findsOneWidget);
+    await tester.scrollUntilVisible(
       find.text('Check latest version'),
       240,
       scrollable: find.byType(Scrollable).first,
