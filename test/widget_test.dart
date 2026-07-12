@@ -454,6 +454,41 @@ void main() {
     },
   );
 
+  testWidgets('page navigation follows wrapped lines after window resize', (
+    WidgetTester tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(640, 72);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    final controller = ReaderController(
+      initialContent: '第一段\n第二段在窄窗口中会换成多个视觉行，翻页时不能跳过未显示的部分。\n第三段',
+      preferencesStore: MemoryReaderPreferencesStore(),
+      windowController: _FakePlatformWindowController(),
+      fileBookmarkService: _FakeReaderFileBookmarkService(),
+      importService: _FakeReaderImportService(),
+      libraryStorage: MemoryReaderLibraryStorage(),
+    );
+    await controller.initialize();
+
+    await tester.pumpWidget(
+      CheatReaderApp(
+        controller: controller,
+        windowController: _FakePlatformWindowController(),
+      ),
+    );
+    await tester.pump();
+
+    tester.view.physicalSize = const Size(220, 72);
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
+    await tester.pumpAndSettle();
+
+    expect(controller.currentLineIndex, 1);
+    expect(find.textContaining('第三段'), findsNothing);
+  });
+
   testWidgets('can disable punctuation-preferred visual wrapping', (
     WidgetTester tester,
   ) async {

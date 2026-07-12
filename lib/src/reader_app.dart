@@ -533,7 +533,7 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     return true;
   }
 
-  bool _advanceReadingPage() {
+  Future<bool> _advanceReadingPage() async {
     final stepCount = math.max(1, _visibleVisualLineCapacity);
     var movedAny = false;
     var animated = false;
@@ -544,6 +544,12 @@ class _ReaderSurfaceState extends State<ReaderSurface>
       }
       movedAny = true;
       animated = true;
+      if (index < stepCount - 1) {
+        await WidgetsBinding.instance.endOfFrame;
+        if (!mounted) {
+          break;
+        }
+      }
     }
     return movedAny;
   }
@@ -569,11 +575,11 @@ class _ReaderSurfaceState extends State<ReaderSurface>
 
     _autoPageTimer = Timer.periodic(
       Duration(seconds: desiredInterval),
-      (_) => _autoPageTick(),
+      (_) => unawaited(_autoPageTick()),
     );
   }
 
-  void _autoPageTick() {
+  Future<void> _autoPageTick() async {
     if (!mounted) {
       return;
     }
@@ -581,9 +587,9 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     final settings = widget.controller.settings;
     final moved = settings.autoPageGranularity == ReaderAutoPageGranularity.line
         ? _advanceReadingInternal(animate: true)
-        : _advanceReadingPage();
+        : await _advanceReadingPage();
 
-    if (moved || !settings.autoPageEnabled) {
+    if (!mounted || moved || !settings.autoPageEnabled) {
       return;
     }
 
@@ -607,7 +613,7 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     );
   }
 
-  void _rewindReadingPage() {
+  Future<void> _rewindReadingPage() async {
     final stepCount = math.max(1, _visibleVisualLineCapacity);
     var animated = false;
     for (var index = 0; index < stepCount; index += 1) {
@@ -616,6 +622,12 @@ class _ReaderSurfaceState extends State<ReaderSurface>
         break;
       }
       animated = true;
+      if (index < stepCount - 1) {
+        await WidgetsBinding.instance.endOfFrame;
+        if (!mounted) {
+          break;
+        }
+      }
     }
   }
 
@@ -1006,8 +1018,12 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     final bindings = <ShortcutActivator, VoidCallback>{
       const SingleActivator(LogicalKeyboardKey.arrowDown): _advanceReading,
       const SingleActivator(LogicalKeyboardKey.arrowUp): _rewindReading,
-      const SingleActivator(LogicalKeyboardKey.pageDown): _advanceReadingPage,
-      const SingleActivator(LogicalKeyboardKey.pageUp): _rewindReadingPage,
+      const SingleActivator(LogicalKeyboardKey.pageDown): () {
+        unawaited(_advanceReadingPage());
+      },
+      const SingleActivator(LogicalKeyboardKey.pageUp): () {
+        unawaited(_rewindReadingPage());
+      },
       const SingleActivator(LogicalKeyboardKey.space): _advanceReading,
       const SingleActivator(LogicalKeyboardKey.space, shift: true):
           _rewindReading,
@@ -1023,8 +1039,12 @@ class _ReaderSurfaceState extends State<ReaderSurface>
     final shortcuts = settings.shortcutBindings;
     addBinding(shortcuts.nextLine, _advanceReading);
     addBinding(shortcuts.previousLine, _rewindReading);
-    addBinding(shortcuts.nextPage, _advanceReadingPage);
-    addBinding(shortcuts.previousPage, _rewindReadingPage);
+    addBinding(shortcuts.nextPage, () {
+      unawaited(_advanceReadingPage());
+    });
+    addBinding(shortcuts.previousPage, () {
+      unawaited(_rewindReadingPage());
+    });
     addBinding(shortcuts.toggleMode, _handleModeToggleShortcut);
     addBinding(shortcuts.bossKey, () {
       unawaited(_handleBossKeyShortcut());
